@@ -1,0 +1,378 @@
+/* ==========================================================================
+   Afsoo Commerce - Premium Red, White & Sandalwood (Sandel) Design System
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand Primary Red Scale */
+  --primary: #dc2626;         /* Vibrant Crimson Red */
+  --primary-hover: #b91c1c;   /* Deep Ruby Red */
+  --primary-light: #fee2e2;   /* Soft Red Light Tint */
+  --primary-dark: #991b1b;    /* Dark Wine Red */
+  --primary-glow: rgba(220, 38, 38, 0.35);
+
+  --secondary: #991b1b;
+  --secondary-hover: #7f1d1d;
+
+  --accent: #ef4444;
+  --accent-hover: #b91c1c;
+
+  /* Sandalwood (Sandel) Color Scale */
+  --sandel-50:  #fdfbf7;      /* Sandel Lightest Tint */
+  --sandel-100: #f7f2ea;      /* Page Background Sandel */
+  --sandel-200: #efe5d5;      /* Soft Card Sandel */
+  --sandel-300: #e4d5c1;      /* Border Sandel */
+  --sandel-400: #cfbda4;      /* Medium Sandel */
+  --sandel-500: #ab9578;      /* Warm Sandel */
+  --sandel-600: #8c7254;      /* Deep Sandel Accent */
+  --sandel-700: #5c4735;      /* Muted Sandel Text */
+  --sandel-800: #3a2b1f;      /* Dark Sandel Text */
+  --sandel-900: #1a0f07;      /* Deepest Heading Sandel / Black */
+
+  /* Neutral Dark Scale */
+  --slate-900: #1a0f07;
+  --slate-800: #3a2b1f;
+  --slate-700: #5c4735;
+  --slate-600: #8c7254;
+  --slate-500: #7a6652;
+  --slate-400: #ab9578;
+  --slate-300: #e4d5c1;
+  --slate-200: #efe5d5;
+  --slate-100: #f7f2ea;
+  --slate-50:  #fdfbf7;
+
+  /* Pure White */
+  --white: #ffffff;
+
+  /* Status Colors */
+  --success: #15803d;
+  --success-bg: #f0fdf4;
+  --warning: #b45309;
+  --warning-bg: #fffbeb;
+  --danger: #dc2626;
+  --danger-bg: #fee2e2;
+  --info: #0369a1;
+  --info-bg: #f0f9ff;
+
+  /* Admin Dashboard Theme */
+  --admin-bg: #f7f2ea;
+  --admin-card: #ffffff;
+  --admin-border: #e4d5c1;
+  --admin-sidebar: #5c0d0d;
+  --admin-sidebar-hover: #7f1d1d;
+  --admin-text: #1a0f07;
+  --admin-muted: #5c4735;
+
+  /* Luxury Gradients */
+  --grad-hero: linear-gradient(135deg, #3b0707 0%, #7f1d1d 40%, #b91c1c 75%, #991b1b 100%);
+  --grad-primary: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  --grad-sandel: linear-gradient(135deg, #fdfbf7 0%, #f7f2ea 50%, #efe5d5 100%);
+  --grad-card: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
+
+  /* Geometry & Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Luxurious Multi-layered Shadows */
+  --shadow-sm: 0 2px 6px rgba(26, 15, 7, 0.04);
+  --shadow-md: 0 8px 20px rgba(220, 38, 38, 0.08), 0 3px 6px rgba(26, 15, 7, 0.04);
+  --shadow-lg: 0 16px 36px rgba(220, 38, 38, 0.14), 0 4px 12px rgba(26, 15, 7, 0.06);
+  --shadow-xl: 0 24px 48px rgba(185, 28, 28, 0.18), 0 8px 16px rgba(26, 15, 7, 0.08);
+
+  /* Fonts & Transitions */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --transition-fast: all 0.15s ease;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Keyframe Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--sandel-100);
+  color: var(--sandel-800);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Layout Utilities */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-padding {
+  padding: 3.5rem 0;
+}
+
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 2rem; }
+
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (max-width: 1024px) {
+  .grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-4, .grid-cols-3, .grid-cols-2 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+}
+
+/* Creative Hover & Card Effect Utilities */
+.hover-lift {
+  transition: var(--transition);
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--sandel-300);
+}
+
+/* UI Buttons in Creative Red, White & Sandel Theme */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.675rem 1.35rem;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--grad-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(185, 28, 28, 0.4);
+}
+
+.btn-secondary {
+  background-color: var(--sandel-200);
+  color: var(--sandel-900);
+  border-color: var(--sandel-300);
+}
+
+.btn-secondary:hover {
+  background-color: var(--sandel-300);
+  color: var(--sandel-900);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: #ffffff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: 0.875rem 1.85rem;
+  font-size: 1.0625rem;
+  border-radius: var(--radius-md);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-primary { background: var(--primary-light); color: var(--primary-dark); border: 1px solid rgba(220, 38, 38, 0.2); }
+.badge-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(21, 128, 61, 0.2); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(180, 83, 9, 0.2); }
+.badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(220, 38, 38, 0.2); }
+.badge-info { background: var(--info-bg); color: var(--info); border: 1px solid rgba(3, 105, 161, 0.2); }
+
+/* Creative Product & Feature Cards */
+.card {
+  background: var(--grad-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--sandel-300);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+/* Form Controls */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--sandel-900);
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 0.675rem 0.95rem;
+  border: 1px solid var(--sandel-300);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: var(--transition);
+  background: #ffffff;
+  color: var(--sandel-900);
+  font-weight: 600;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+}
+
+/* Admin Dashboard Elements */
+.admin-body {
+  background-color: var(--admin-bg);
+  color: var(--admin-text);
+  min-height: 100vh;
+}
+
+.admin-card {
+  background-color: #ffffff;
+  border: 1px solid var(--sandel-300);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th {
+  padding: 0.95rem 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sandel-900);
+  border-bottom: 2px solid var(--sandel-300);
+  background-color: var(--sandel-200);
+}
+
+.data-table td {
+  padding: 1.1rem;
+  border-bottom: 1px solid var(--sandel-200);
+  font-size: 0.9375rem;
+  color: var(--sandel-900);
+  transition: var(--transition-fast);
+}
+
+.data-table tbody tr:hover td {
+  background-color: var(--sandel-50);
+}

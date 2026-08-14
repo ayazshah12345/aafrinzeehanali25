@@ -1,0 +1,286 @@
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { api } from '../services/api';
+
+const ShopContext = createContext();
+
+export function ShopProvider({ children }) {
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [newOrdersCount, setNewOrdersCount] = useState(0);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+
+  const [sessionOrderIds, setSessionOrderIds] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('afsoo_session_orders');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  // Format DB order row to match UI properties
+  const formatOrder = (row) => ({
+    id: row.order_ref || row.id || `AFS-${Math.floor(1000 + Math.random() * 9000)}`,
+    db_id: row.id,
+    user_id: row.user_id,
+    customer: row.shipping_name || row.customer || 'Customer',
+    email: row.email || `${(row.shipping_name || 'customer').toLowerCase().replace(/\s+/g, '.')}@customer.com`,
+    phone: row.shipping_phone || row.phone || '9629217907',
+    address: row.shipping_address || row.address || '',
+    productName: row.product_name || row.productName || 'Afsoo Store Product',
+    productImage: row.product_image || row.productImage || '',
+    date: row.created_at ? new Date(row.created_at).toISOString().split('T')[0] : (row.date || new Date().toISOString().split('T')[0]),
+    total: parseFloat(row.total_amount || row.total || 0),
+    status: row.status || 'Pending',
+    paymentStatus: row.payment_status || row.paymentStatus || 'Paid via 9629217907',
+    paymentNumber: '9629217907',
+    isNew: row.isNew || false,
+  });
+
+  // Fetch products — displays only user-added products
+  const fetchProducts = useCallback(async () => {
+    setIsLoadingProducts(true);
+    const dbProducts = await api.getProducts();
+    setProducts(dbProducts || []);
+    setIsLoadingProducts(false);
+  }, []);
+
+  // Fetch orders — displays user placed orders
+  const fetchOrders = useCallback(async () => {
+    setIsLoadingOrders(true);
+    const dbOrders = await api.getOrders();
+    setOrders(dbOrders ? dbOrders.map(formatOrder) : []);
+    setIsLoadingOrders(false);
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchOrders();
+
+    // Fast live tracking polling from PostgreSQL every 2 seconds
+    const interval = setInterval(() => {
+      fetchOrders();
+    }, 2000);
+
+    const handleSync = () => {
+      fetchOrders();
+    };
+
+    window.addEventListener('order_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('order_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, [fetchProducts, fetchOrders]);
+
+  // Count of pending orders requiring fulfillment
+  const pendingOrdersCount = orders.filter((o) => o.status === 'Pending' || o.isNew).length;
+
+  // Admin function: Add product directly into persistent DB & PostgreSQL
+  const addProduct = async (productData) => {
+    const created = await api.createProduct(productData);
+    if (created) {
+      setProducts((prev) => [created, ...prev.filter((p) => String(p.id) !== String(created.id))]);
+      await fetchProducts();
+    }
+    return created;
+  };
+
+  // Admin function: Edit product in persistent DB & PostgreSQL
+  const editProduct = async (id, productData) => {
+    const updated = await api.updateProduct(id, productData);
+    if (updated) {
+      setProducts((prev) => prev.map((p) => (String(p.id) === String(id) ? updated : p)));
+      await fetchProducts();
+    }
+    return updated;
+  };
+
+  // Admin function: Delete product from persistent DB & PostgreSQL
+  const deleteProduct = async (id) => {
+    const success = await api.deleteProduct(id);
+    if (success) {
+      setProducts((prev) => prev.filter((p) => String(p.id) !== String(id)));
+      await fetchProducts();
+    }
+    return success;
+  };
+
+  // Customer function: Place direct order via "Get the Product" flow
+  const placeOrder = async ({ customerName, email, address, phone, product, quantity = 1 }) => {
+    const userEmail = email || (currentUser ? currentUser.email : '');
+    const userId = currentUser ? currentUser.id : null;
+
+    const orderId = `AFS-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newOrder = {
+      id: orderId,
+      customer: customerName,
+      email: userEmail,
+      user_id: userId,
+      phone: phone,
+      address: address,
+      date: new Date().toISOString().split('T')[0],
+      total: (product ? product.price || 0 : 0) * quantity,
+      status: 'Pending',
+      paymentStatus: 'Paid via 9629217907',
+      paymentNumber: '9629217907',
+      itemsCount: quantity,
+      productName: product ? product.name : 'Store Item',
+      productImage: product ? product.image || product.image_url : '',
+      isNew: true,
+    };
+
+    setOrders((prevOrders) => [newOrder, ...prevOrders]);
+    setSessionOrderIds((prev) => {
+      const updated = [...prev, orderId];
+      try {
+        sessionStorage.setItem('afsoo_session_orders', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+    setNewOrdersCount((prev) => prev + 1);
+
+    // Call REST API and save into PostgreSQL database
+    const res = await api.createOrder({
+      shipping_name: customerName,
+      email: userEmail,
+      user_id: userId,
+      shipping_phone: phone,
+      shipping_address: address,
+      product_id: product ? product.id : null,
+      quantity,
+      total_amount: (product ? product.price || 0 : 0) * quantity,
+    });
+
+    if (res) {
+      await fetchOrders();
+    }
+
+    return newOrder;
+  };
+
+  // Admin function to update fulfillment status & reflect instantly for customers
+  const updateOrderStatus = async (orderId, newStatus) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((ord) =>
+        ord.id === orderId || ord.db_id === orderId || String(ord.db_id) === String(orderId) || String(ord.id) === String(orderId)
+          ? { ...ord, status: newStatus, isNew: false }
+          : ord
+      )
+    );
+
+    await api.updateOrderStatus(orderId, newStatus);
+    await fetchOrders();
+
+    // Trigger instant live update event across app & open tabs
+    window.dispatchEvent(new CustomEvent('order_updated', { detail: { orderId, status: newStatus } }));
+    try {
+      localStorage.setItem('afsoo_order_status_sync', `${orderId}:${newStatus}:${Date.now()}`);
+    } catch (e) {}
+  };
+
+  // Admin function to mark an order as seen
+  const markOrderAsSeen = (orderId) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((ord) =>
+        ord.id === orderId ? { ...ord, isNew: false } : ord
+      )
+    );
+  };
+
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('afsoo_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const registerUser = async ({ name, email, password }) => {
+    try {
+      const res = await api.register({ name, email, password });
+      if (res && res.status === 'success' && res.data) {
+        if (res.data.user) {
+          setCurrentUser(res.data.user);
+          localStorage.setItem('afsoo_user', JSON.stringify(res.data.user));
+        }
+        return { success: true, message: res.message };
+      }
+      return { success: false, message: res?.message || res?.error || 'Registration failed' };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  };
+
+  const loginUser = async ({ email, password }) => {
+    try {
+      const res = await api.login({ email, password });
+      if (res && res.status === 'success' && res.data) {
+        if (res.data.user) {
+          setCurrentUser(res.data.user);
+          localStorage.setItem('afsoo_user', JSON.stringify(res.data.user));
+        }
+        return { success: true, message: res.message };
+      }
+      return { success: false, message: res?.message || res?.error || 'Invalid credentials' };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  };
+
+  const logoutUser = () => {
+    localStorage.removeItem('afsoo_auth_token');
+    localStorage.removeItem('afsoo_user');
+    setCurrentUser(null);
+  };
+
+  const clearNotifications = () => {
+    setNewOrdersCount(0);
+    setOrders((prevOrders) => prevOrders.map((ord) => ({ ...ord, isNew: false })));
+  };
+
+  return (
+    <ShopContext.Provider
+      value={{
+        products,
+        isLoadingProducts,
+        orders,
+        sessionOrderIds,
+        isLoadingOrders,
+        cart,
+        setCart,
+        newOrdersCount,
+        pendingOrdersCount,
+        currentUser,
+        registerUser,
+        loginUser,
+        logoutUser,
+        fetchProducts,
+        fetchOrders,
+        addProduct,
+        editProduct,
+        deleteProduct,
+        placeOrder,
+        updateOrderStatus,
+        markOrderAsSeen,
+        clearNotifications,
+      }}
+    >
+      {children}
+    </ShopContext.Provider>
+  );
+}
+
+export function useShop() {
+  const context = useContext(ShopContext);
+  if (!context) {
+    throw new Error('useShop must be used within a ShopProvider');
+  }
+  return context;
+}
