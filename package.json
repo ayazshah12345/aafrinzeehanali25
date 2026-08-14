@@ -6,6 +6,12 @@
     "start": "node backend/index.js",
     "backend": "cd backend && npm start",
     "frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm install && npm run build",
+    "vercel-build": "cd frontend && npm install && npm run build",
     "dev": "node -e \"const { spawn } = require('child_process'); spawn('npm', ['start'], { cwd: './backend', stdio: 'inherit', shell: true }); spawn('npm', ['run', 'dev'], { cwd: './frontend', stdio: 'inherit', shell: true });\""
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.0"
   }
 }
