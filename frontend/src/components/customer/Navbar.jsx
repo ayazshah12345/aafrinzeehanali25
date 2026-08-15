@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, ShoppingCart, Menu, X, Shield, LogOut, Package } from 'lucide-react';
+import { Search, User, ShoppingCart, Menu, X, Shield, LogOut, Package, Home as HomeIcon } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 
 export function Navbar() {
@@ -13,12 +13,13 @@ export function Navbar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+      setMobileMenuOpen(false);
     }
   };
 
   return (
     <header style={{
-      background: 'rgba(255, 255, 255, 0.96)',
+      background: 'rgba(255, 255, 255, 0.98)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       borderBottom: '1px solid var(--sandel-300)',
@@ -27,17 +28,17 @@ export function Navbar() {
       zIndex: 100,
       boxShadow: 'var(--shadow-sm)',
     }}>
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1.25rem', position: 'relative' }}>
         {/* Brand Logo & Avatar */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }} onClick={() => setMobileMenuOpen(false)}>
           <div style={{
             position: 'relative',
-            width: '42px',
-            height: '42px',
-            borderRadius: '12px',
+            width: '38px',
+            height: '38px',
+            borderRadius: '10px',
             overflow: 'hidden',
             border: '2px solid var(--primary)',
-            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.25)',
+            boxShadow: '0 4px 10px rgba(220, 38, 38, 0.25)',
             flexShrink: 0,
           }}>
             <img
@@ -46,36 +47,36 @@ export function Navbar() {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
-          <span style={{ fontWeight: 800, fontSize: '1.35rem', color: 'var(--sandel-900)', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
+          <span style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--sandel-900)', letterSpacing: '-0.02em' }}>
             Afsoo<span style={{ color: 'var(--primary)' }}>Commerce</span>
           </span>
         </Link>
 
-        {/* Search Bar */}
-        <form onSubmit={handleSearch} style={{ flex: 1, maxWidth: '420px', position: 'relative', minWidth: '180px' }}>
+        {/* Desktop Search Bar */}
+        <form onSubmit={handleSearch} className="nav-desktop" style={{ flex: 1, maxWidth: '380px', margin: '0 1.5rem', position: 'relative' }}>
           <input
             type="text"
             className="form-input"
-            placeholder="Search catalog items..."
+            placeholder="Search items, categories..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
-              paddingLeft: '2.5rem',
+              paddingLeft: '2.4rem',
               borderRadius: 'var(--radius-full)',
               background: 'var(--sandel-50)',
               border: '1px solid var(--sandel-300)',
-              fontSize: '0.875rem',
+              fontSize: '0.85rem',
             }}
           />
-          <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--sandel-600)' }} />
+          <Search size={15} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--sandel-600)' }} />
         </form>
 
         {/* Desktop Navigation Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-          <Link to="/" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem', transition: 'var(--transition)' }}>
+        <nav className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+          <Link to="/" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem' }}>
             Home
           </Link>
-          <Link to="/products" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem', transition: 'var(--transition)' }}>
+          <Link to="/products" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem' }}>
             Products
           </Link>
           <Link to="/orders" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
@@ -88,7 +89,7 @@ export function Navbar() {
 
           {currentUser ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', borderLeft: '1px solid var(--sandel-300)', paddingLeft: '1rem' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)' }}>
                 Hi, {currentUser.name || currentUser.email.split('@')[0]}
               </span>
               <button
@@ -123,13 +124,135 @@ export function Navbar() {
             background: 'var(--sandel-200)',
             border: '1px solid var(--sandel-300)',
             textDecoration: 'none',
-            whiteSpace: 'nowrap',
             boxShadow: 'var(--shadow-sm)',
-          }} title="Admin Control Panel Access">
+          }}>
             <Shield size={14} style={{ color: 'var(--primary)' }} /> Admin Portal
           </Link>
         </nav>
+
+        {/* Mobile Header Actions (Cart + Hamburger Toggle) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }} className="nav-mobile-toggle">
+          <Link to="/cart" style={{ color: 'var(--sandel-900)', padding: '0.35rem' }} onClick={() => setMobileMenuOpen(false)}>
+            <ShoppingCart size={22} />
+          </Link>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={{
+              background: 'var(--sandel-200)',
+              border: '1px solid var(--sandel-300)',
+              borderRadius: 'var(--radius-md)',
+              padding: '0.45rem',
+              color: 'var(--sandel-900)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justify: 'center'
+            }}
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Vertical Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div style={{
+          background: '#ffffff',
+          borderTop: '1px solid var(--sandel-300)',
+          padding: '1.25rem 1.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          boxShadow: 'var(--shadow-lg)',
+          animation: 'slideUpFade 0.25s ease',
+        }}>
+          {/* Mobile Search Bar */}
+          <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }}>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Search catalog items..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                paddingLeft: '2.5rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--sandel-50)',
+                border: '1px solid var(--sandel-300)',
+                fontSize: '0.9rem',
+              }}
+            />
+            <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--sandel-600)' }} />
+          </form>
+
+          {/* Mobile Vertical Stacked Links */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: 'var(--sandel-100)', borderRadius: 'var(--radius-md)', fontWeight: 800, color: 'var(--sandel-900)' }}
+            >
+              <HomeIcon size={18} style={{ color: 'var(--primary)' }} /> Home Page
+            </Link>
+
+            <Link
+              to="/products"
+              onClick={() => setMobileMenuOpen(false)}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: 'var(--sandel-100)', borderRadius: 'var(--radius-md)', fontWeight: 800, color: 'var(--sandel-900)' }}
+            >
+              <Package size={18} style={{ color: 'var(--primary)' }} /> All Products Catalog
+            </Link>
+
+            <Link
+              to="/orders"
+              onClick={() => setMobileMenuOpen(false)}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: 'var(--sandel-100)', borderRadius: 'var(--radius-md)', fontWeight: 800, color: 'var(--sandel-900)' }}
+            >
+              <Package size={18} style={{ color: 'var(--primary)' }} /> My Customer Orders
+            </Link>
+
+            <Link
+              to="/admin/login"
+              onClick={() => setMobileMenuOpen(false)}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: 'var(--primary-light)', border: '1px solid rgba(220, 38, 38, 0.2)', borderRadius: 'var(--radius-md)', fontWeight: 800, color: 'var(--primary-dark)' }}
+            >
+              <Shield size={18} style={{ color: 'var(--primary)' }} /> Admin Portal Login
+            </Link>
+
+            {currentUser ? (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', background: 'var(--sandel-50)', borderRadius: 'var(--radius-md)', border: '1px solid var(--sandel-300)', marginTop: '0.5rem' }}>
+                <span style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.9rem' }}>
+                  Logged in as {currentUser.name || currentUser.email}
+                </span>
+                <button
+                  onClick={() => { logoutUser(); setMobileMenuOpen(false); }}
+                  className="btn btn-outline btn-sm"
+                >
+                  <LogOut size={14} /> Exit
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.5rem' }}>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="btn btn-outline btn-block"
+                >
+                  <User size={16} /> Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="btn btn-primary btn-block"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

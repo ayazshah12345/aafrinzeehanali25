@@ -4,9 +4,9 @@ import AdminSidebar from '../components/admin/AdminSidebar';
 
 export function AdminLayout() {
   return (
-    <div className="admin-body" style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="admin-body admin-layout-container">
       <AdminSidebar />
-      <main style={{ flex: 1, overflowY: 'auto' }}>
+      <main className="admin-main-content">
         <Outlet />
       </main>
     </div>

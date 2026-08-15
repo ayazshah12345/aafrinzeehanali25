@@ -15,37 +15,47 @@ export function AdminSidebar() {
   ];
 
   return (
-    <aside style={{
-      width: '260px',
-      background: 'linear-gradient(180deg, #5c0d0d 0%, #3d0808 100%)',
-      borderRight: '1px solid rgba(228, 213, 193, 0.2)',
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      padding: '1.5rem 1rem',
-      boxShadow: 'var(--shadow-md)',
-    }}>
+    <aside className="admin-sidebar-aside">
       <div>
         {/* Brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0 0.5rem 1.5rem 0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
-          <div style={{
-            background: 'var(--primary)',
-            color: 'white',
-            padding: '0.45rem',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)',
-          }}>
-            <Shield size={22} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 0.5rem 1.25rem 0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{
+              background: 'var(--primary)',
+              color: 'white',
+              padding: '0.45rem',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)',
+            }}>
+              <Shield size={22} />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>Afsoo Admin</h2>
+              <span style={{ fontSize: '0.72rem', color: '#f5ede2', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>Control Panel</span>
+            </div>
           </div>
-          <div>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>Afsoo Admin</h2>
-            <span style={{ fontSize: '0.72rem', color: '#f5ede2', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>System Control Panel</span>
-          </div>
+
+          <NavLink
+            to="/"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              color: '#f5ede2',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              background: 'rgba(255,255,255,0.1)',
+              padding: '0.35rem 0.65rem',
+              borderRadius: 'var(--radius-sm)'
+            }}
+          >
+            <ArrowLeft size={14} /> Exit
+          </NavLink>
         </div>
 
         {/* Nav Links */}
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginTop: '1.5rem' }}>
+        <nav className="admin-nav-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginTop: '1.25rem' }}>
           {navItems.map((item) => {
             const Icon = item.icon;
             const isOrders = item.label === 'Orders';
@@ -60,12 +70,13 @@ export function AdminSidebar() {
                   padding: '0.75rem 1rem',
                   borderRadius: 'var(--radius-md)',
                   fontWeight: 800,
-                  fontSize: '0.9375rem',
+                  fontSize: '0.9rem',
                   textDecoration: 'none',
                   transition: 'var(--transition)',
                   color: isActive ? '#ffffff' : '#f5ede2',
                   backgroundColor: isActive ? 'var(--primary)' : 'transparent',
                   boxShadow: isActive ? '0 4px 14px rgba(220, 38, 38, 0.4)' : 'none',
+                  whiteSpace: 'nowrap',
                 })}
               >
                 <Icon size={18} />
@@ -92,8 +103,8 @@ export function AdminSidebar() {
         </nav>
       </div>
 
-      {/* Back to store link */}
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.12)', paddingTop: '1rem' }}>
+      {/* Back to store link on desktop */}
+      <div className="nav-desktop" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.12)', paddingTop: '1rem' }}>
         <NavLink
           to="/"
           style={{
