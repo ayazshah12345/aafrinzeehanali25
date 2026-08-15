@@ -54,7 +54,7 @@ export function AdminDashboard() {
         </div>
 
         {/* Quick Actions & Recent Orders Table */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2rem' }}>
+        <div className="admin-dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2rem' }}>
           {/* Recent Orders Overview */}
           <div className="admin-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
