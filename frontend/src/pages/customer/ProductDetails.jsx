@@ -9,7 +9,7 @@ import { useShop } from '../../context/ShopContext';
 
 export function ProductDetails() {
   const { id } = useParams();
-  const { products, isLoadingProducts } = useShop();
+  const { products, isLoadingProducts, addToCart } = useShop();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,8 +17,11 @@ export function ProductDetails() {
   const product = products.find((p) => String(p.id) === String(id));
 
   const handleAddToCart = () => {
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    if (product) {
+      addToCart(product, quantity);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    }
   };
 
   if (isLoadingProducts) {

@@ -21,14 +21,14 @@ export function GetProductModal({ product, isOpen, onClose }) {
 
   if (!isOpen || !product) return null;
 
-  const handleConfirmOrder = (e) => {
+  const handleConfirmOrder = async (e) => {
     e.preventDefault();
     if (!customerName || !customerEmail || !address || !phone) {
       alert('Please fill in your name, email address, delivery address, and phone number.');
       return;
     }
 
-    const order = placeOrder({
+    const order = await placeOrder({
       customerName,
       email: customerEmail,
       address,

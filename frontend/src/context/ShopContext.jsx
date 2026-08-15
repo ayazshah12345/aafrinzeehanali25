@@ -6,7 +6,66 @@ const ShopContext = createContext();
 export function ShopProvider({ children }) {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('afsoo_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const addToCart = (product, quantity = 1) => {
+    setCart((prev) => {
+      const existingIndex = prev.findIndex((item) => String(item.product.id) === String(product.id));
+      let updated;
+      if (existingIndex > -1) {
+        updated = [...prev];
+        updated[existingIndex].quantity += quantity;
+      } else {
+        updated = [...prev, { product, quantity }];
+      }
+      try {
+        localStorage.setItem('afsoo_cart', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
+  const removeFromCart = (productId) => {
+    setCart((prev) => {
+      const updated = prev.filter((item) => String(item.product.id) !== String(productId));
+      try {
+        localStorage.setItem('afsoo_cart', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
+  const updateCartQuantity = (productId, delta) => {
+    setCart((prev) => {
+      const updated = prev
+        .map((item) => {
+          if (String(item.product.id) === String(productId)) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean);
+      try {
+        localStorage.setItem('afsoo_cart', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    try {
+      localStorage.removeItem('afsoo_cart');
+    } catch (e) {}
+  };
   const [newOrdersCount, setNewOrdersCount] = useState(0);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
@@ -196,12 +255,14 @@ export function ShopProvider({ children }) {
     return { success: true, isPostgres };
   };
 
-  // Customer function: Place direct order via "Get the Product" flow
-  const placeOrder = async ({ customerName, email, address, phone, product, quantity = 1 }) => {
+  // Customer function: Place direct order via "Get the Product" or Checkout flow
+  const placeOrder = async ({ customerName, email, address, phone, product, quantity = 1, totalAmount, items }) => {
     const userEmail = email || (currentUser ? currentUser.email : '');
     const userId = currentUser ? currentUser.id : null;
 
     const orderId = `AFS-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderTotal = totalAmount || ((product ? product.price || 0 : 0) * quantity);
+
     const newOrder = {
       id: orderId,
       customer: customerName,
@@ -210,13 +271,13 @@ export function ShopProvider({ children }) {
       phone: phone,
       address: address,
       date: new Date().toISOString().split('T')[0],
-      total: (product ? product.price || 0 : 0) * quantity,
+      total: orderTotal,
       status: 'Pending',
       paymentStatus: 'Paid via 9629217907',
       paymentNumber: '9629217907',
       itemsCount: quantity,
-      productName: product ? product.name : 'Store Item',
-      productImage: product ? product.image || product.image_url : '',
+      productName: product ? product.name : (items && items[0] ? items[0].product.name : 'Store Item'),
+      productImage: product ? (product.image || product.image_url) : (items && items[0] ? items[0].product.image : ''),
       isNew: true,
     };
 
@@ -231,15 +292,16 @@ export function ShopProvider({ children }) {
     setNewOrdersCount((prev) => prev + 1);
 
     // Call REST API and save into PostgreSQL database
+    const safeProductId = product && product.id && !isNaN(parseInt(product.id, 10)) ? parseInt(product.id, 10) : null;
     const res = await api.createOrder({
       shipping_name: customerName,
       email: userEmail,
-      user_id: userId,
+      user_id: userId && !isNaN(parseInt(userId, 10)) ? parseInt(userId, 10) : null,
       shipping_phone: phone,
       shipping_address: address,
-      product_id: product ? product.id : null,
+      product_id: safeProductId,
       quantity,
-      total_amount: (product ? product.price || 0 : 0) * quantity,
+      total_amount: orderTotal,
     });
 
     if (res) {
@@ -394,6 +456,10 @@ export function ShopProvider({ children }) {
         isLoadingOrders,
         cart,
         setCart,
+        addToCart,
+        removeFromCart,
+        updateCartQuantity,
+        clearCart,
         newOrdersCount,
         pendingOrdersCount,
         currentUser,

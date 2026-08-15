@@ -1,28 +1,10 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Trash2, ArrowRight, ShoppingBag, ShieldCheck } from 'lucide-react';
-import Button from '../../components/common/Button';
-import Card from '../../components/common/Card';
-import { formatCurrency } from '../../utils/formatters';
+import { useShop } from '../../context/ShopContext';
 
 export function Cart() {
-  const [cart, setCart] = useState([]);
+  const { cart, updateCartQuantity, removeFromCart } = useShop();
 
-  const updateQuantity = (index, delta) => {
-    const updated = [...cart];
-    const newQty = updated[index].quantity + delta;
-    if (newQty > 0) {
-      updated[index].quantity = newQty;
-      setCart(updated);
-    }
-  };
-
-  const removeItem = (index) => {
-    setCart(cart.filter((_, i) => i !== index));
-  };
-
-  const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const shipping = subtotal > 1500 ? 0 : 150.00;
+  const subtotal = cart.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity, 0);
+  const shipping = subtotal > 1500 || subtotal === 0 ? 0 : 150.00;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
@@ -63,14 +45,14 @@ export function Cart() {
                 {/* Quantity Controls */}
                 <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--slate-300)', borderRadius: 'var(--radius-md)' }}>
                   <button
-                    onClick={() => updateQuantity(index, -1)}
+                    onClick={() => updateCartQuantity(item.product.id, -1)}
                     style={{ padding: '0.375rem 0.75rem', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700 }}
                   >
                     -
                   </button>
                   <span style={{ padding: '0 0.5rem', fontWeight: 700, fontSize: '0.875rem' }}>{item.quantity}</span>
                   <button
-                    onClick={() => updateQuantity(index, 1)}
+                    onClick={() => updateCartQuantity(item.product.id, 1)}
                     style={{ padding: '0.375rem 0.75rem', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700 }}
                   >
                     +
@@ -78,11 +60,11 @@ export function Cart() {
                 </div>
 
                 <div style={{ fontWeight: 800, fontSize: '1.1rem', width: '110px', textAlign: 'right' }}>
-                  {formatCurrency(item.product.price * item.quantity)}
+                  {formatCurrency((item.product?.price || 0) * item.quantity)}
                 </div>
 
                 <button
-                  onClick={() => removeItem(index)}
+                  onClick={() => removeFromCart(item.product.id)}
                   style={{ background: 'none', border: 'none', color: 'var(--slate-400)', cursor: 'pointer', padding: '0.5rem' }}
                   title="Remove Item"
                 >

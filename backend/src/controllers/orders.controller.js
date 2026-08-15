@@ -14,52 +14,56 @@ export const createOrder = async (req, res) => {
       payment_status = 'Paid via 9629217907',
     } = req.body;
 
-    const userId = req.user ? req.user.id : (user_id || null);
-    const customerEmail = email || (req.user ? req.user.email : null);
-
     if (!shipping_name || !shipping_phone || !shipping_address) {
       return res.status(400).json({ error: 'Validation Error', message: 'Shipping name, phone, and address are required' });
     }
 
-    // Generate unique order reference (e.g. AFS-9021)
-    const order_ref = `AFS-${Math.floor(1000 + Math.random() * 9000)}`;
+    const customerEmail = email || (req.user ? req.user.email : null);
+    
+    // Safely parse numeric IDs for PostgreSQL
+    const numericUserId = user_id && !isNaN(parseInt(user_id, 10))
+      ? parseInt(user_id, 10)
+      : (req.user && req.user.id && !isNaN(parseInt(req.user.id, 10)) ? parseInt(req.user.id, 10) : null);
 
-    let calculatedTotal = total_amount;
+    const numericProductId = product_id && !isNaN(parseInt(product_id, 10)) ? parseInt(product_id, 10) : null;
+    const numericQuantity = isNaN(parseInt(quantity, 10)) ? 1 : parseInt(quantity, 10);
+    const parsedTotal = parseFloat(total_amount);
+    let calculatedTotal = isNaN(parsedTotal) ? 0 : parsedTotal;
     let productPrice = 0;
 
-    if (product_id) {
-      const prodRes = await query('SELECT price FROM products WHERE id = $1', [product_id]);
+    if (numericProductId) {
+      const prodRes = await query('SELECT price FROM products WHERE id = $1', [numericProductId]);
       if (prodRes.rows.length > 0) {
         productPrice = parseFloat(prodRes.rows[0].price);
-        calculatedTotal = calculatedTotal || productPrice * quantity;
+        calculatedTotal = calculatedTotal || productPrice * numericQuantity;
       }
     }
 
-    // Insert order into PostgreSQL including email
+    const order_ref = `AFS-${Math.floor(1000 + Math.random() * 9000)}`;
+
     const orderRes = await query(
       `INSERT INTO orders (order_ref, user_id, email, total_amount, status, payment_status, shipping_name, shipping_phone, shipping_address)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING *`,
       [
         order_ref,
-        userId,
+        numericUserId,
         customerEmail,
         calculatedTotal || 1999.00,
         'Pending',
         payment_status,
-        shipping_name,
-        shipping_phone,
-        shipping_address,
+        shipping_name.trim(),
+        shipping_phone.trim(),
+        shipping_address.trim(),
       ]
     );
 
     const order = orderRes.rows[0];
 
-    // Insert order item if product_id provided
-    if (product_id) {
+    if (numericProductId) {
       await query(
         'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)',
-        [order.id, product_id, quantity, productPrice || calculatedTotal]
+        [order.id, numericProductId, numericQuantity, productPrice || calculatedTotal]
       );
     }
 
