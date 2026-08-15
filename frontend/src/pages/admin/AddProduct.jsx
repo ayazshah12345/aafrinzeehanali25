@@ -86,25 +86,34 @@ export function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.name || !formData.name.trim()) {
+      alert('Please enter a valid product name.');
+      return;
+    }
     setIsSubmitting(true);
 
     const productData = {
-      name: formData.name,
+      name: formData.name.trim(),
       category: formData.category,
-      sku: formData.sku || `SKU-${Math.floor(100 + Math.random() * 900)}`,
+      sku: formData.sku ? formData.sku.trim() : `SKU-${Math.floor(100 + Math.random() * 900)}`,
       price: parseFloat(formData.price || 0),
       stock: parseInt(formData.stock || 0, 10),
-      description: formData.description,
+      description: formData.description || '',
       image: imagePreview || imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80',
       image_url: imagePreview || imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80',
     };
 
-    const created = await addProduct(productData);
+    const res = await addProduct(productData);
     setIsSubmitting(false);
-    if (created) {
+    if (res && res.product) {
+      if (res.isPostgres) {
+        alert(`✅ Product "${res.product.name}" stored directly in PostgreSQL Database!`);
+      } else {
+        alert(`⚠️ Product stored locally. (To store in PostgreSQL, ensure Express backend on port 5000 is running).`);
+      }
       navigate('/admin/products');
     } else {
-      alert('Failed to save product to PostgreSQL database. Please check console for details.');
+      alert('Failed to save product. Please try again.');
     }
   };
 

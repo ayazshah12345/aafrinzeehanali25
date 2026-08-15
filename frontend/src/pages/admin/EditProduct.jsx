@@ -104,25 +104,34 @@ export function EditProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.name || !formData.name.trim()) {
+      alert('Please enter a valid product name.');
+      return;
+    }
     setIsSubmitting(true);
 
     const productData = {
-      name: formData.name,
+      name: formData.name.trim(),
       category: formData.category,
-      sku: formData.sku,
+      sku: formData.sku ? formData.sku.trim() : `SKU-${Math.floor(100 + Math.random() * 900)}`,
       price: parseFloat(formData.price || 0),
       stock: parseInt(formData.stock || 0, 10),
-      description: formData.description,
+      description: formData.description || '',
       image: imagePreview || imageUrl,
       image_url: imagePreview || imageUrl,
     };
 
-    const updated = await editProduct(id, productData);
+    const res = await editProduct(id, productData);
     setIsSubmitting(false);
-    if (updated) {
+    if (res && res.product) {
+      if (res.isPostgres) {
+        alert(`✅ Product "${res.product.name}" updated directly in PostgreSQL Database!`);
+      } else {
+        alert(`⚠️ Product updated locally.`);
+      }
       navigate('/admin/products');
     } else {
-      alert('Failed to update product in PostgreSQL database. Please check console for details.');
+      alert('Failed to update product. Please try again.');
     }
   };
 

@@ -39,11 +39,40 @@ export function ShopProvider({ children }) {
     isNew: row.isNew || false,
   });
 
-  // Fetch products — displays only user-added products
+  // Helper to load locally saved products
+  const getLocalProducts = () => {
+    try {
+      const saved = localStorage.getItem('afsoo_local_products');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+
+  // Helper to save products to localStorage
+  const saveLocalProducts = (items) => {
+    try {
+      localStorage.setItem('afsoo_local_products', JSON.stringify(items));
+    } catch (e) {
+      console.warn('Failed to save products to localStorage:', e);
+    }
+  };
+
+  // Fetch products — merges PostgreSQL DB products & user-added local products
   const fetchProducts = useCallback(async () => {
     setIsLoadingProducts(true);
     const dbProducts = await api.getProducts();
-    setProducts(dbProducts || []);
+    const localItems = getLocalProducts();
+
+    if (Array.isArray(dbProducts) && dbProducts.length > 0) {
+      // Merge DB products with local items (avoiding duplicates)
+      const dbIds = new Set(dbProducts.map((p) => String(p.id)));
+      const uniqueLocal = localItems.filter((p) => !dbIds.has(String(p.id)));
+      const combined = [...dbProducts, ...uniqueLocal];
+      setProducts(combined);
+    } else {
+      setProducts(localItems);
+    }
     setIsLoadingProducts(false);
   }, []);
 
@@ -66,6 +95,7 @@ export function ShopProvider({ children }) {
 
     const handleSync = () => {
       fetchOrders();
+      fetchProducts();
     };
 
     window.addEventListener('order_updated', handleSync);
@@ -81,34 +111,89 @@ export function ShopProvider({ children }) {
   // Count of pending orders requiring fulfillment
   const pendingOrdersCount = orders.filter((o) => o.status === 'Pending' || o.isNew).length;
 
-  // Admin function: Add product directly into persistent DB & PostgreSQL
+  // Admin function: Add product directly into persistent DB & fallback localStorage
   const addProduct = async (productData) => {
-    const created = await api.createProduct(productData);
-    if (created) {
-      setProducts((prev) => [created, ...prev.filter((p) => String(p.id) !== String(created.id))]);
-      await fetchProducts();
+    const apiRes = await api.createProduct(productData);
+
+    let createdProduct = null;
+    let isPostgres = false;
+
+    if (apiRes && apiRes.success && apiRes.product) {
+      createdProduct = apiRes.product;
+      isPostgres = true;
+    } else {
+      // Create local product fallback when PostgreSQL server is offline or fails
+      createdProduct = {
+        id: `prod_${Date.now()}`,
+        name: productData.name,
+        category: productData.category || 'General',
+        sku: productData.sku || `SKU-${Math.floor(100 + Math.random() * 900)}`,
+        price: parseFloat(productData.price || 0),
+        stock: parseInt(productData.stock || 0, 10),
+        description: productData.description || '',
+        image: productData.image || productData.image_url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80',
+        image_url: productData.image_url || productData.image || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80',
+        created_at: new Date().toISOString(),
+        isLocal: true,
+      };
     }
-    return created;
+
+    setProducts((prev) => {
+      const updated = [createdProduct, ...prev.filter((p) => String(p.id) !== String(createdProduct.id))];
+      saveLocalProducts(updated);
+      return updated;
+    });
+
+    return { product: createdProduct, isPostgres };
   };
 
-  // Admin function: Edit product in persistent DB & PostgreSQL
+  // Admin function: Edit product in persistent DB & fallback localStorage
   const editProduct = async (id, productData) => {
-    const updated = await api.updateProduct(id, productData);
-    if (updated) {
-      setProducts((prev) => prev.map((p) => (String(p.id) === String(id) ? updated : p)));
-      await fetchProducts();
+    const apiRes = await api.updateProduct(id, productData);
+
+    let updatedProduct = null;
+    let isPostgres = false;
+
+    if (apiRes && apiRes.success && apiRes.product) {
+      updatedProduct = apiRes.product;
+      isPostgres = true;
+    } else {
+      // Fallback local edit
+      updatedProduct = {
+        id: String(id),
+        name: productData.name,
+        category: productData.category || 'General',
+        sku: productData.sku,
+        price: parseFloat(productData.price || 0),
+        stock: parseInt(productData.stock || 0, 10),
+        description: productData.description || '',
+        image: productData.image || productData.image_url || '',
+        image_url: productData.image_url || productData.image || '',
+        updated_at: new Date().toISOString(),
+        isLocal: true,
+      };
     }
-    return updated;
+
+    setProducts((prev) => {
+      const list = prev.map((p) => (String(p.id) === String(id) ? { ...p, ...updatedProduct } : p));
+      saveLocalProducts(list);
+      return list;
+    });
+
+    return { product: updatedProduct, isPostgres };
   };
 
-  // Admin function: Delete product from persistent DB & PostgreSQL
+  // Admin function: Delete product from persistent DB & fallback localStorage
   const deleteProduct = async (id) => {
-    const success = await api.deleteProduct(id);
-    if (success) {
-      setProducts((prev) => prev.filter((p) => String(p.id) !== String(id)));
-      await fetchProducts();
-    }
-    return success;
+    const isPostgres = await api.deleteProduct(id);
+
+    setProducts((prev) => {
+      const list = prev.filter((p) => String(p.id) !== String(id));
+      saveLocalProducts(list);
+      return list;
+    });
+
+    return { success: true, isPostgres };
   };
 
   // Customer function: Place direct order via "Get the Product" flow

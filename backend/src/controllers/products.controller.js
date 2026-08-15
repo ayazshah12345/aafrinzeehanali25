@@ -63,18 +63,21 @@ export const createProduct = async (req, res) => {
   try {
     const { name, description, price, image, image_url, category, stock, sku } = req.body;
 
-    if (!name || price === undefined || price === null) {
-      return res.status(400).json({ error: 'Validation Error', message: 'Name and price are required' });
+    if (!name || name.trim() === '') {
+      return res.status(400).json({ error: 'Validation Error', message: 'Product name is required' });
     }
 
+    const parsedPrice = parseFloat(price);
+    const numericPrice = isNaN(parsedPrice) ? 0 : parsedPrice;
+    const parsedStock = parseInt(stock, 10);
+    const numericStock = isNaN(parsedStock) ? 0 : parsedStock;
+
     const finalImageUrl = image_url || image || '';
-    const numericPrice = parseFloat(price);
-    const numericStock = parseInt(stock || '0', 10);
-    const generatedSku = sku || `SKU-${Math.floor(100 + Math.random() * 900)}`;
+    const generatedSku = sku && sku.trim() !== '' ? sku : `SKU-${Math.floor(100 + Math.random() * 900)}`;
 
     const result = await query(
       'INSERT INTO products (name, description, price, image_url, category, stock, sku) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [name, description || '', numericPrice, finalImageUrl, category || 'General', numericStock, generatedSku]
+      [name.trim(), description || '', numericPrice, finalImageUrl, category || 'General', numericStock, generatedSku]
     );
 
     return res.status(201).json({

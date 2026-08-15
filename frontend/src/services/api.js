@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api';
+const API_BASE_URLS = ['/api', 'http://localhost:5000/api'];
 
 const getHeaders = () => {
   const token = localStorage.getItem('afsoo_auth_token');
@@ -11,11 +11,33 @@ const getHeaders = () => {
   return headers;
 };
 
+const fetchApi = async (endpoint, options = {}) => {
+  let lastErr = null;
+  for (const baseUrl of API_BASE_URLS) {
+    try {
+      const url = `${baseUrl}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+      const res = await fetch(url, {
+        ...options,
+        headers: {
+          ...getHeaders(),
+          ...(options.headers || {}),
+        },
+      });
+      if (res.ok || res.status === 400 || res.status === 404 || res.status === 401) {
+        return res;
+      }
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr || new Error('Failed to connect to backend server');
+};
+
 export const api = {
   // Health & Database Connection Check
   checkHealth: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/health`);
+      const res = await fetchApi('/health');
       return await res.json();
     } catch (err) {
       return { status: 'error', message: err.message };
@@ -25,9 +47,8 @@ export const api = {
   // Authentication Endpoints
   register: async (userData) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      const res = await fetchApi('/auth/register', {
         method: 'POST',
-        headers: getHeaders(),
         body: JSON.stringify(userData),
       });
       return await res.json();
@@ -41,9 +62,8 @@ export const api = {
       const cleanEmail = credentials.email ? credentials.email.trim() : '';
       const cleanPassword = credentials.password ? credentials.password.trim() : '';
 
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      const res = await fetchApi('/auth/login', {
         method: 'POST',
-        headers: getHeaders(),
         body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
       });
       const data = await res.json();
@@ -71,9 +91,7 @@ export const api = {
 
   getMe: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: getHeaders(),
-      });
+      const res = await fetchApi('/auth/me');
       return await res.json();
     } catch (err) {
       return { status: 'error', message: err.message };
@@ -81,11 +99,11 @@ export const api = {
   },
 
   // ----------------------------------------------------
-  // Product CRUD — 100% DIRECT POSTGRESQL DATABASE ONLY
+  // Product CRUD — DIRECT POSTGRESQL DATABASE
   // ----------------------------------------------------
   getProducts: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/products`);
+      const res = await fetchApi('/products');
       if (!res.ok) return [];
       const data = await res.json();
       if (data && data.data && Array.isArray(data.data.products)) {
@@ -93,14 +111,14 @@ export const api = {
       }
       return [];
     } catch (err) {
-      console.error('Failed to fetch products from PostgreSQL database:', err.message);
+      console.warn('Failed to fetch products from PostgreSQL database:', err.message);
       return [];
     }
   },
 
   getProductById: async (id) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/products/${id}`);
+      const res = await fetchApi(`/products/${id}`);
       if (!res.ok) return null;
       const data = await res.json();
       if (data && data.data && data.data.product) {
@@ -114,9 +132,8 @@ export const api = {
 
   createProduct: async (productData) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/products`, {
+      const res = await fetchApi('/admin/products', {
         method: 'POST',
-        headers: getHeaders(),
         body: JSON.stringify({
           name: productData.name,
           description: productData.description || '',
@@ -129,66 +146,54 @@ export const api = {
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || data.error || 'Failed to insert product into PostgreSQL database');
-        return null;
+      if (res.ok && data && data.data && data.data.product) {
+        return { success: true, product: data.data.product, isPostgres: true };
       }
-
-      if (data && data.data && data.data.product) {
-        return data.data.product;
-      }
-      return null;
+      console.warn('Backend createProduct error response:', data);
+      return { success: false, error: data.message || data.error };
     } catch (err) {
-      console.error('PostgreSQL API createProduct Connection Error:', err);
-      alert('Cannot connect to Express / PostgreSQL backend server. Ensure Express backend server is running on port 5000.');
-      return null;
+      console.warn('PostgreSQL API createProduct Connection Error:', err.message);
+      return { success: false, error: err.message };
     }
   },
 
   updateProduct: async (id, productData) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/products/${id}`, {
+      const res = await fetchApi(`/admin/products/${id}`, {
         method: 'PUT',
-        headers: getHeaders(),
         body: JSON.stringify(productData),
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || data.error || 'Failed to update product in PostgreSQL database');
-        return null;
+      if (res.ok && data && data.data && data.data.product) {
+        return { success: true, product: data.data.product, isPostgres: true };
       }
-
-      if (data && data.data && data.data.product) {
-        return data.data.product;
-      }
-      return null;
+      return { success: false, error: data.message || data.error };
     } catch (err) {
-      alert('Failed to connect to PostgreSQL backend server.');
-      return null;
+      console.warn('PostgreSQL API updateProduct Connection Error:', err.message);
+      return { success: false, error: err.message };
     }
   },
 
   deleteProduct: async (id) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/products/${id}`, {
+      const res = await fetchApi(`/admin/products/${id}`, {
         method: 'DELETE',
-        headers: getHeaders(),
       });
       const data = await res.json();
       return data.status === 'success';
     } catch (err) {
-      alert('Failed to delete product from PostgreSQL database.');
+      console.warn('PostgreSQL API deleteProduct Connection Error:', err.message);
       return false;
     }
   },
 
   // ----------------------------------------------------
-  // Order CRUD — 100% DIRECT POSTGRESQL DATABASE ONLY
+  // Order CRUD — DIRECT POSTGRESQL DATABASE
   // ----------------------------------------------------
   getOrders: async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/orders`);
+      const res = await fetchApi('/orders');
       if (!res.ok) return [];
       const data = await res.json();
       if (data && data.data && Array.isArray(data.data.orders)) {
@@ -202,24 +207,21 @@ export const api = {
 
   createOrder: async (orderData) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/orders`, {
+      const res = await fetchApi('/orders', {
         method: 'POST',
-        headers: getHeaders(),
         body: JSON.stringify(orderData),
       });
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (err) {
-      alert('Failed to place order in PostgreSQL database.');
+      console.warn('Failed to place order in PostgreSQL database:', err.message);
       return null;
     }
   },
 
   updateOrderStatus: async (orderId, status) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/orders/admin/${orderId}/status`, {
+      const res = await fetchApi(`/orders/admin/${orderId}/status`, {
         method: 'PUT',
-        headers: getHeaders(),
         body: JSON.stringify({ status }),
       });
       return await res.json();

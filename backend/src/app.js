@@ -17,6 +17,14 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+// Normalize URL prefix for Vercel Serverless Function execution
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/health')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
+
 // API Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
