@@ -1,4 +1,12 @@
-const API_BASE_URLS = ['/api', 'http://localhost:5000/api'];
+const getApiBaseUrls = () => {
+  if (typeof window !== 'undefined') {
+    const origin = window.location.origin;
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return ['/api', 'http://localhost:5000/api'];
+    }
+  }
+  return ['/api'];
+};
 
 const getHeaders = () => {
   const token = localStorage.getItem('afsoo_auth_token');
@@ -13,7 +21,8 @@ const getHeaders = () => {
 
 const fetchApi = async (endpoint, options = {}) => {
   let lastErr = null;
-  for (const baseUrl of API_BASE_URLS) {
+  const baseUrls = getApiBaseUrls();
+  for (const baseUrl of baseUrls) {
     try {
       const url = `${baseUrl}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
       const res = await fetch(url, {

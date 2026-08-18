@@ -124,11 +124,7 @@ export function EditProduct() {
     const res = await editProduct(id, productData);
     setIsSubmitting(false);
     if (res && res.product) {
-      if (res.isPostgres) {
-        alert(`✅ Product "${res.product.name}" updated directly in PostgreSQL Database!`);
-      } else {
-        alert(`⚠️ Product updated locally.`);
-      }
+      alert(`✅ Product "${res.product.name}" updated successfully!`);
       navigate('/admin/products');
     } else {
       alert('Failed to update product. Please try again.');

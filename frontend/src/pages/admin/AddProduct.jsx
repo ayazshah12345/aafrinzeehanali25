@@ -106,11 +106,7 @@ export function AddProduct() {
     const res = await addProduct(productData);
     setIsSubmitting(false);
     if (res && res.product) {
-      if (res.isPostgres) {
-        alert(`✅ Product "${res.product.name}" stored directly in PostgreSQL Database!`);
-      } else {
-        alert(`⚠️ Product stored locally. (To store in PostgreSQL, ensure Express backend on port 5000 is running).`);
-      }
+      alert(`✅ Product "${res.product.name}" created successfully!`);
       navigate('/admin/products');
     } else {
       alert('Failed to save product. Please try again.');
