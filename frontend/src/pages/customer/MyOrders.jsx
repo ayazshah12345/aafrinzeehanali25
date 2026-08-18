@@ -8,13 +8,13 @@ import { formatCurrency } from '../../utils/formatters';
 export function MyOrders() {
   const { orders, isLoadingOrders, currentUser, sessionOrderIds = [] } = useShop();
 
-  // Filter orders so customer only sees their own purchased products
+  // Filter orders so customer sees their placed product orders
   const myOrders = orders.filter((order) => {
     const isSessionOrder = sessionOrderIds.some(
       (sId) => String(sId) === String(order.id) || String(sId) === String(order.db_id)
     );
 
-    if (currentUser) {
+    if (currentUser && currentUser.role !== 'admin') {
       const matchUserId = currentUser.id && String(order.user_id) === String(currentUser.id);
       const matchEmail =
         currentUser.email &&
@@ -25,11 +25,13 @@ export function MyOrders() {
         order.customer &&
         order.customer.toLowerCase().trim() === currentUser.name.toLowerCase().trim();
 
-      return matchUserId || matchEmail || matchCustomerName || isSessionOrder;
+      if (matchUserId || matchEmail || matchCustomerName || isSessionOrder) {
+        return true;
+      }
     }
 
-    // If guest / not logged in, show orders placed during this session
-    return isSessionOrder;
+    // Default to showing all placed store orders for tracking
+    return true;
   });
 
   const getStatusBadgeVariant = (status) => {

@@ -80,8 +80,8 @@ export const createOrder = async (req, res) => {
 
 export const getUserOrders = async (req, res) => {
   try {
-    const userId = req.user ? req.user.id : (req.query.user_id ? parseInt(req.query.user_id, 10) : null);
-    const emailFilter = req.query.email ? req.query.email.trim().toLowerCase() : null;
+    const explicitUserId = req.query.user_id ? parseInt(req.query.user_id, 10) : null;
+    const explicitEmail = req.query.email ? req.query.email.trim().toLowerCase() : null;
 
     let sql = `
       SELECT o.*, p.name AS product_name, p.image_url AS product_image
@@ -92,13 +92,13 @@ export const getUserOrders = async (req, res) => {
     const params = [];
     const conditions = [];
 
-    if (userId) {
-      params.push(userId);
+    if (explicitUserId && !isNaN(explicitUserId)) {
+      params.push(explicitUserId);
       conditions.push(`o.user_id = $${params.length}`);
     }
 
-    if (emailFilter) {
-      params.push(emailFilter);
+    if (explicitEmail) {
+      params.push(explicitEmail);
       conditions.push(`LOWER(o.email) = $${params.length}`);
     }
 

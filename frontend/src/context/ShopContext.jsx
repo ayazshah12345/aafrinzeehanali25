@@ -98,6 +98,25 @@ export function ShopProvider({ children }) {
     isNew: row.isNew || false,
   });
 
+  // Helper to load locally saved orders
+  const getLocalOrders = () => {
+    try {
+      const saved = localStorage.getItem('afsoo_local_orders');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+
+  // Helper to save orders to localStorage
+  const saveLocalOrders = (items) => {
+    try {
+      localStorage.setItem('afsoo_local_orders', JSON.stringify(items));
+    } catch (e) {
+      console.warn('Failed to save orders to localStorage:', e);
+    }
+  };
+
   // Helper to load locally saved products
   const getLocalProducts = () => {
     try {
@@ -135,11 +154,22 @@ export function ShopProvider({ children }) {
     setIsLoadingProducts(false);
   }, []);
 
-  // Fetch orders — displays user placed orders
+  // Fetch orders — displays user placed orders, merging DB & local orders
   const fetchOrders = useCallback(async () => {
     setIsLoadingOrders(true);
     const dbOrders = await api.getOrders();
-    setOrders(dbOrders ? dbOrders.map(formatOrder) : []);
+    const localOrders = getLocalOrders();
+
+    if (Array.isArray(dbOrders) && dbOrders.length > 0) {
+      const formattedDb = dbOrders.map(formatOrder);
+      const dbOrderRefs = new Set(formattedDb.map((o) => String(o.id)));
+      const uniqueLocal = localOrders.filter((o) => !dbOrderRefs.has(String(o.id)));
+      const combined = [...formattedDb, ...uniqueLocal];
+      setOrders(combined);
+      saveLocalOrders(combined);
+    } else if (localOrders.length > 0) {
+      setOrders(localOrders);
+    }
     setIsLoadingOrders(false);
   }, []);
 
@@ -281,7 +311,11 @@ export function ShopProvider({ children }) {
       isNew: true,
     };
 
-    setOrders((prevOrders) => [newOrder, ...prevOrders]);
+    setOrders((prevOrders) => {
+      const updated = [newOrder, ...prevOrders.filter((o) => String(o.id) !== String(newOrder.id))];
+      saveLocalOrders(updated);
+      return updated;
+    });
     setSessionOrderIds((prev) => {
       const updated = [...prev, orderId];
       try {
@@ -313,13 +347,15 @@ export function ShopProvider({ children }) {
 
   // Admin function to update fulfillment status & reflect instantly for customers
   const updateOrderStatus = async (orderId, newStatus) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((ord) =>
+    setOrders((prevOrders) => {
+      const updated = prevOrders.map((ord) =>
         ord.id === orderId || ord.db_id === orderId || String(ord.db_id) === String(orderId) || String(ord.id) === String(orderId)
           ? { ...ord, status: newStatus, isNew: false }
           : ord
-      )
-    );
+      );
+      saveLocalOrders(updated);
+      return updated;
+    });
 
     await api.updateOrderStatus(orderId, newStatus);
     await fetchOrders();
