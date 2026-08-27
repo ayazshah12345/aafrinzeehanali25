@@ -13,7 +13,10 @@ export function AdminDashboard() {
   const [isClearing, setIsClearing] = useState(false);
   const [clearSuccess, setClearSuccess] = useState(false);
 
-  const totalRevenue = orders.reduce((sum, ord) => sum + (parseFloat(ord.total) || 0), 0);
+  // Calculate total revenue ONLY for orders accepted / confirmed by Admin
+  const acceptedStatuses = ['Order Confirmed', 'Completed', 'Delivered', 'Processing', 'Shipped'];
+  const acceptedOrders = orders.filter((ord) => acceptedStatuses.includes(ord.status));
+  const totalRevenue = acceptedOrders.reduce((sum, ord) => sum + (parseFloat(ord.total) || 0), 0);
   const totalCustomersCount = new Set(orders.map((o) => o.phone || o.customer)).size;
 
   const handleClearSales = async () => {
@@ -82,8 +85,8 @@ export function AdminDashboard() {
 
         {/* Metric Cards Grid */}
         <div className="grid grid-cols-4 gap-6" style={{ marginBottom: '2rem' }}>
-          <StatCard title="Total Revenue" value={formatCurrency(totalRevenue)} icon={IndianRupee} />
-          <StatCard title="Active Orders" value={orders.length} icon={ShoppingBag} />
+          <StatCard title="Total Revenue (Accepted)" value={formatCurrency(totalRevenue)} icon={IndianRupee} change={`${acceptedOrders.length} accepted order(s)`} trend="up" />
+          <StatCard title="Total Orders" value={orders.length} icon={ShoppingBag} />
           <StatCard title="Catalog Products" value={products.length} icon={Package} />
           <StatCard title="Total Customers" value={totalCustomersCount} icon={Users} />
         </div>

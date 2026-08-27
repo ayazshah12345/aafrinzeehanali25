@@ -40,7 +40,9 @@ export const createOrder = async (req, res) => {
       }
     }
 
-    const order_ref = `AFS-${Math.floor(1000 + Math.random() * 9000)}`;
+    const order_ref = req.body.order_ref && String(req.body.order_ref).startsWith('AFS-')
+      ? req.body.order_ref
+      : `AFS-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const orderRes = await query(
       `INSERT INTO orders (order_ref, user_id, email, total_amount, status, payment_status, shipping_name, shipping_phone, shipping_address)

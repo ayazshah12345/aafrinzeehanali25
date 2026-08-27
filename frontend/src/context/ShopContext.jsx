@@ -187,7 +187,16 @@ export function ShopProvider({ children }) {
       if (Array.isArray(dbOrders) && dbOrders.length > 0) {
         const formattedDb = dbOrders.map(formatOrder);
         const dbOrderRefs = new Set(formattedDb.map((o) => String(o.id)));
-        const uniqueLocal = localOrders.filter((o) => !dbOrderRefs.has(String(o.id)));
+        
+        // Deduplicate orders to prevent duplicate listings
+        const seenKeys = new Set(formattedDb.map((o) => `${o.customer}_${o.total}_${o.phone}`));
+        const uniqueLocal = localOrders.filter((o) => {
+          if (dbOrderRefs.has(String(o.id))) return false;
+          const key = `${o.customer}_${o.total}_${o.phone}`;
+          if (seenKeys.has(key)) return false;
+          return o.isLocalFallback;
+        });
+
         const combined = [...formattedDb, ...uniqueLocal];
         
         setOrders((prev) => {
@@ -358,6 +367,7 @@ export function ShopProvider({ children }) {
       productName: product ? product.name : (items && items[0] ? items[0].product.name : 'Store Item'),
       productImage: product ? (product.image || product.image_url) : (items && items[0] ? items[0].product.image : ''),
       isNew: true,
+      isLocalFallback: true,
     };
 
     setOrders((prevOrders) => {
@@ -385,6 +395,7 @@ export function ShopProvider({ children }) {
       : [];
 
     const res = await api.createOrder({
+      order_ref: orderId,
       shipping_name: customerName,
       email: userEmail,
       user_id: userId && !isNaN(parseInt(userId, 10)) ? parseInt(userId, 10) : null,
@@ -397,7 +408,7 @@ export function ShopProvider({ children }) {
     });
 
     if (res) {
-      await fetchOrders();
+      await fetchOrders(true);
     }
 
     return newOrder;
