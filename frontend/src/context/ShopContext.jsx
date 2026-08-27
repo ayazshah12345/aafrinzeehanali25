@@ -495,6 +495,10 @@ export function ShopProvider({ children }) {
   const logoutUser = () => {
     localStorage.removeItem('afsoo_auth_token');
     localStorage.removeItem('afsoo_user');
+    try {
+      sessionStorage.removeItem('afsoo_session_orders');
+    } catch (e) {}
+    setSessionOrderIds([]);
     setCurrentUser(null);
   };
 

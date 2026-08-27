@@ -10,23 +10,24 @@ export function MyOrders() {
 
   // Filter orders strictly so customer sees ONLY their placed product orders (no mixing with other emails)
   const myOrders = orders.filter((order) => {
-    const isSessionOrder = sessionOrderIds.some(
-      (sId) => String(sId) === String(order.id) || String(sId) === String(order.db_id)
-    );
+    const userEmail = currentUser && currentUser.email ? currentUser.email.toLowerCase().trim() : '';
+    const orderEmail = order.email ? order.email.toLowerCase().trim() : '';
 
     if (currentUser) {
       // Admin role can see all orders if visiting tracking
       if (currentUser.role === 'admin') return true;
 
-      const userEmail = currentUser.email ? currentUser.email.toLowerCase().trim() : '';
-      const orderEmail = order.email ? order.email.toLowerCase().trim() : '';
+      // Strict email & user ID isolation: Orders MUST match the logged-in email/user_id
       const matchEmail = Boolean(userEmail && orderEmail && userEmail === orderEmail);
       const matchUserId = Boolean(currentUser.id && String(order.user_id) === String(currentUser.id));
 
-      return matchUserId || matchEmail || isSessionOrder;
+      return matchEmail || matchUserId;
     }
 
     // Guest user (not signed in) — only show orders placed during this current browsing session
+    const isSessionOrder = sessionOrderIds.some(
+      (sId) => String(sId) === String(order.id) || String(sId) === String(order.db_id)
+    );
     return isSessionOrder;
   });
 
