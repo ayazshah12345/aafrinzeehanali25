@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ShopProvider } from './context/ShopContext';
 
 // Layouts
@@ -46,6 +46,7 @@ export function App() {
 
         {/* Admin Protected Layout Routes */}
         <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="products" element={<ManageProducts />} />
           <Route path="products/new" element={<AddProduct />} />
