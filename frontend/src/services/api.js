@@ -76,25 +76,14 @@ export const api = {
         body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
       });
       const data = await res.json();
-      if (data && data.status === 'success' && data.data && data.data.token) {
+      if (res.ok && data && data.status === 'success' && data.data && data.data.token) {
         localStorage.setItem('afsoo_auth_token', data.data.token);
         return data;
       }
 
-      if (cleanEmail.toLowerCase() === 'afuzee0324@yahoo.com') {
-        const adminUser = { id: 1, name: 'Aafrin Zeeshan Admin', email: cleanEmail, role: 'admin' };
-        localStorage.setItem('afsoo_auth_token', 'admin_token_2026');
-        return { status: 'success', message: 'Admin authenticated', data: { user: adminUser, token: 'admin_token_2026' } };
-      }
-
-      return data;
+      return { status: 'error', message: data.message || data.error || 'Invalid email or password' };
     } catch (err) {
-      if (credentials.email && credentials.email.trim().toLowerCase() === 'afuzee0324@yahoo.com') {
-        const adminUser = { id: 1, name: 'Aafrin Zeeshan Admin', email: credentials.email, role: 'admin' };
-        localStorage.setItem('afsoo_auth_token', 'admin_token_2026');
-        return { status: 'success', message: 'Admin authenticated', data: { user: adminUser, token: 'admin_token_2026' } };
-      }
-      return { status: 'error', message: 'Invalid credentials or PostgreSQL server offline' };
+      return { status: 'error', message: 'Failed to connect to authentication server. Please check your credentials.' };
     }
   },
 

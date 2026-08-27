@@ -8,30 +8,26 @@ import { formatCurrency } from '../../utils/formatters';
 export function MyOrders() {
   const { orders, isLoadingOrders, currentUser, sessionOrderIds = [] } = useShop();
 
-  // Filter orders so customer sees their placed product orders
+  // Filter orders strictly so customer sees ONLY their placed product orders (no mixing with other emails)
   const myOrders = orders.filter((order) => {
     const isSessionOrder = sessionOrderIds.some(
       (sId) => String(sId) === String(order.id) || String(sId) === String(order.db_id)
     );
 
-    if (currentUser && currentUser.role !== 'admin') {
-      const matchUserId = currentUser.id && String(order.user_id) === String(currentUser.id);
-      const matchEmail =
-        currentUser.email &&
-        order.email &&
-        order.email.toLowerCase().trim() === currentUser.email.toLowerCase().trim();
-      const matchCustomerName =
-        currentUser.name &&
-        order.customer &&
-        order.customer.toLowerCase().trim() === currentUser.name.toLowerCase().trim();
+    if (currentUser) {
+      // Admin role can see all orders if visiting tracking
+      if (currentUser.role === 'admin') return true;
 
-      if (matchUserId || matchEmail || matchCustomerName || isSessionOrder) {
-        return true;
-      }
+      const userEmail = currentUser.email ? currentUser.email.toLowerCase().trim() : '';
+      const orderEmail = order.email ? order.email.toLowerCase().trim() : '';
+      const matchEmail = Boolean(userEmail && orderEmail && userEmail === orderEmail);
+      const matchUserId = Boolean(currentUser.id && String(order.user_id) === String(currentUser.id));
+
+      return matchUserId || matchEmail || isSessionOrder;
     }
 
-    // Default to showing all placed store orders for tracking
-    return true;
+    // Guest user (not signed in) — only show orders placed during this current browsing session
+    return isSessionOrder;
   });
 
   const getStatusBadgeVariant = (status) => {

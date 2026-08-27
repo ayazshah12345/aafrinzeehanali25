@@ -501,42 +501,9 @@ export function ShopProvider({ children }) {
         return { success: true, message: 'Logged in successfully!' };
       }
 
-      // Special handling for Admin email
-      if (cleanEmail === 'afuzee0324@yahoo.com') {
-        const adminUser = { id: 1, name: 'Aafrin Zeeshan Admin', email: cleanEmail, role: 'admin' };
-        setCurrentUser(adminUser);
-        localStorage.setItem('afsoo_user', JSON.stringify(adminUser));
-        localStorage.setItem('afsoo_auth_token', 'admin_token_2026');
-        return { success: true, message: 'Admin authenticated!' };
-      }
-
-      // Fallback login to ensure user is never blocked
-      if (cleanEmail && password) {
-        const fallbackUser = {
-          id: Date.now(),
-          name: cleanEmail.split('@')[0] || 'Customer',
-          email: cleanEmail,
-          role: 'customer',
-        };
-        setCurrentUser(fallbackUser);
-        localStorage.setItem('afsoo_user', JSON.stringify(fallbackUser));
-        localStorage.setItem('afsoo_auth_token', `token_${fallbackUser.id}`);
-        return { success: true, message: 'Logged in successfully!' };
-      }
-
-      return { success: false, message: res?.message || res?.error || 'Invalid credentials' };
+      return { success: false, message: res?.message || res?.error || 'Invalid email or password' };
     } catch (err) {
-      const cleanEmail = email ? email.trim().toLowerCase() : 'customer@example.com';
-      const fallbackUser = {
-        id: Date.now(),
-        name: cleanEmail.split('@')[0] || 'Customer',
-        email: cleanEmail,
-        role: cleanEmail === 'afuzee0324@yahoo.com' ? 'admin' : 'customer',
-      };
-      setCurrentUser(fallbackUser);
-      localStorage.setItem('afsoo_user', JSON.stringify(fallbackUser));
-      localStorage.setItem('afsoo_auth_token', fallbackUser.role === 'admin' ? 'admin_token_2026' : `token_${fallbackUser.id}`);
-      return { success: true, message: 'Signed in successfully!' };
+      return { success: false, message: 'Invalid email or password' };
     }
   };
 
