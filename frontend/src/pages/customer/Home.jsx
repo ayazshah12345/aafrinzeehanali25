@@ -37,7 +37,7 @@ export function Home() {
           pointerEvents: 'none',
         }}></div>
 
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5rem', alignItems: 'center', position: 'relative', zIndex: 2 }}>
+        <div className="container hero-grid" style={{ position: 'relative', zIndex: 2 }}>
           <div>
             {/* Glassmorphic Badge Pill */}
             <div style={{
@@ -59,7 +59,7 @@ export function Home() {
             </div>
 
             {/* Giant Luxury Heading */}
-            <h1 style={{ fontSize: '3.3rem', fontWeight: 800, lineHeight: 1.12, marginBottom: '2.25rem', letterSpacing: '-0.02em' }}>
+            <h1 className="hero-title">
               Experience Premium <br />
               <span style={{
                 background: 'linear-gradient(135deg, #ffffff 0%, #f5ede2 50%, #efe5d5 100%)',

@@ -233,3 +233,18 @@ export const updateOrderStatus = async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error', message: err.message });
   }
 };
+
+export const clearAllOrders = async (req, res) => {
+  try {
+    await query('DELETE FROM order_items');
+    await query('DELETE FROM orders');
+    return res.json({
+      status: 'success',
+      message: 'All sales information and order records have been cleared successfully.',
+    });
+  } catch (err) {
+    console.error('clearAllOrders error:', err);
+    return res.status(500).json({ error: 'Internal Server Error', message: err.message });
+  }
+};
+

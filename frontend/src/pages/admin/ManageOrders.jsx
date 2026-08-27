@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { Search, Eye, Filter, Phone, MapPin, Smartphone, BellRing, CheckCircle2 } from 'lucide-react';
+import { Search, Eye, Filter, Phone, MapPin, Smartphone, BellRing, CheckCircle2, Trash2, AlertTriangle, RefreshCw } from 'lucide-react';
 import AdminHeader from '../../components/admin/AdminHeader';
 import { useShop } from '../../context/ShopContext';
 import Badge from '../../components/common/Badge';
 import { formatCurrency } from '../../utils/formatters';
 
 export function ManageOrders() {
-  const { orders, updateOrderStatus, markOrderAsSeen, newOrdersCount, clearNotifications } = useShop();
+  const { orders, updateOrderStatus, markOrderAsSeen, newOrdersCount, clearNotifications, clearSalesInfo } = useShop();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   const filteredOrders = orders.filter((ord) => {
     const matchesSearch =
@@ -29,11 +31,18 @@ export function ManageOrders() {
     markOrderAsSeen(ord.id);
   };
 
+  const handleClearSales = async () => {
+    setIsClearing(true);
+    await clearSalesInfo();
+    setIsClearing(false);
+    setShowClearConfirm(false);
+  };
+
   return (
     <div>
       <AdminHeader title="Manage Customer Orders" />
 
-      <div style={{ padding: '2rem' }}>
+      <div style={{ padding: '1.5rem 2rem' }}>
         {/* New Order Alert Banner */}
         {newOrdersCount > 0 && (
           <div
@@ -46,6 +55,8 @@ export function ManageOrders() {
               display: 'flex',
               alignItems: 'center',
               justify: 'space-between',
+              gap: '1rem',
+              flexWrap: 'wrap',
               boxShadow: '0 4px 14px rgba(239, 68, 68, 0.3)',
             }}
           >
@@ -63,8 +74,8 @@ export function ManageOrders() {
           </div>
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <div style={{ position: 'relative', width: '380px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '380px' }}>
             <input
               type="text"
               placeholder="Search by order ID, customer, or phone..."
@@ -83,23 +94,128 @@ export function ManageOrders() {
             <Search size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--sandel-700)' }} />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--sandel-900)', fontWeight: 700 }}>
-            <Filter size={16} />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              style={{ background: '#ffffff', border: '1px solid var(--sandel-300)', color: 'var(--sandel-900)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', fontWeight: 700 }}
-            >
-              <option value="All">All Order Statuses</option>
-              <option value="Order Confirmed">Order Confirmed</option>
-              <option value="Pending">Pending</option>
-              <option value="Processing">Processing</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Completed">Completed</option>
-            </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--sandel-900)', fontWeight: 700 }}>
+              <Filter size={16} />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={{ background: '#ffffff', border: '1px solid var(--sandel-300)', color: 'var(--sandel-900)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', fontWeight: 700 }}
+              >
+                <option value="All">All Order Statuses</option>
+                <option value="Order Confirmed">Order Confirmed</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+
+            {orders.length > 0 && (
+              <button
+                onClick={() => setShowClearConfirm(true)}
+                className="btn btn-sm"
+                style={{
+                  background: '#fee2e2',
+                  color: '#dc2626',
+                  border: '1px solid #fca5a5',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  padding: '0.5rem 0.85rem',
+                }}
+                title="Clear all sales info and order history"
+              >
+                <Trash2 size={15} /> Clear Sales Info
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Clear Sales Confirmation Modal */}
+        {showClearConfirm && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(15, 23, 42, 0.75)',
+              backdropFilter: 'blur(4px)',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justify: 'center',
+              padding: '1.5rem',
+            }}
+          >
+            <div
+              style={{
+                background: '#ffffff',
+                borderRadius: 'var(--radius-lg)',
+                maxWidth: '480px',
+                width: '100%',
+                padding: '2rem',
+                boxShadow: 'var(--shadow-xl)',
+                border: '2px solid var(--primary)',
+              }}
+            >
+              <div
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  background: '#fee2e2',
+                  color: '#dc2626',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justify: 'center',
+                  margin: '0 auto 1.25rem auto',
+                }}
+              >
+                <AlertTriangle size={32} />
+              </div>
+
+              <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--sandel-900)', textAlign: 'center', marginBottom: '0.75rem' }}>
+                Clear Every Sales Info?
+              </h3>
+
+              <p style={{ fontSize: '0.9rem', color: 'var(--sandel-700)', textAlign: 'center', lineHeight: '1.5', marginBottom: '1.5rem' }}>
+                Are you sure you want to clear all sales information? Doing this will reset total calculated revenue back to <strong>₹0.00</strong> and purge all order records.
+              </p>
+
+              <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+                <button
+                  className="btn btn-secondary"
+                  style={{ flex: 1 }}
+                  onClick={() => setShowClearConfirm(false)}
+                  disabled={isClearing}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-primary"
+                  style={{ flex: 1, background: '#dc2626', borderColor: '#b91c1c' }}
+                  onClick={handleClearSales}
+                  disabled={isClearing}
+                >
+                  {isClearing ? (
+                    <>
+                      <RefreshCw size={16} className="animate-spin" /> Clearing...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={16} /> Yes, Clear Sales Info
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Orders Table */}
         <div className="admin-card" style={{ padding: 0 }}>

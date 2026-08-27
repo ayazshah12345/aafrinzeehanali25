@@ -9,19 +9,21 @@ export function AdminHeader({ title }) {
     <header style={{
       background: '#ffffff',
       borderBottom: '1px solid var(--sandel-300)',
-      padding: '1.25rem 2rem',
+      padding: '1rem 1.5rem',
       display: 'flex',
       alignItems: 'center',
-      justify: 'space-between'
+      justify: 'space-between',
+      flexWrap: 'wrap',
+      gap: '1rem',
     }}>
       <div>
-        <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--sandel-900)' }}>{title}</h1>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--sandel-900)' }}>{title}</h1>
         <p style={{ fontSize: '0.8125rem', color: 'var(--sandel-700)' }}>Afsoo Commerce — Store Administration Panel</p>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
         {/* Search */}
-        <div style={{ position: 'relative', width: '220px' }}>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '200px' }}>
           <input
             type="text"
             placeholder="Search dashboard..."

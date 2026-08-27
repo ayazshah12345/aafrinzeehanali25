@@ -334,6 +334,18 @@ export const api = {
       return null;
     }
   },
+
+  clearAllSales: async () => {
+    try {
+      const res = await fetchApi('/orders/admin/clear-sales', {
+        method: 'DELETE',
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('Failed to clear sales in PostgreSQL database:', err.message);
+      return null;
+    }
+  },
 };
 
 export default api;

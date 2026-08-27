@@ -517,6 +517,26 @@ export function ShopProvider({ children }) {
     setOrders((prevOrders) => prevOrders.map((ord) => ({ ...ord, isNew: false })));
   };
 
+  // Admin function: Reset all sales info and clear order history
+  const clearSalesInfo = async () => {
+    try {
+      await api.clearAllSales();
+    } catch (e) {
+      console.warn('Backend clear sales API call failed:', e);
+    }
+    setOrders([]);
+    setNewOrdersCount(0);
+    setSessionOrderIds([]);
+    try {
+      localStorage.removeItem('afsoo_local_orders');
+      sessionStorage.removeItem('afsoo_session_orders');
+    } catch (e) {}
+    window.dispatchEvent(new CustomEvent('order_updated', { detail: { cleared: true } }));
+    try {
+      localStorage.setItem('afsoo_order_status_sync', `cleared:${Date.now()}`);
+    } catch (e) {}
+  };
+
   return (
     <ShopContext.Provider
       value={{
@@ -546,6 +566,7 @@ export function ShopProvider({ children }) {
         updateOrderStatus,
         markOrderAsSeen,
         clearNotifications,
+        clearSalesInfo,
       }}
     >
       {children}

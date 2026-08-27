@@ -401,6 +401,33 @@ button, input, select, textarea {
   overflow-y: auto;
 }
 
+/* Responsive Grid & Layout Helper Classes */
+.admin-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+}
+
+.products-page-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 3.3rem;
+  font-weight: 800;
+  line-height: 1.12;
+  margin-bottom: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
 /* Mobile & Tablet Media Queries for Pixel-Perfect Phone Display */
 .nav-mobile-toggle {
   display: none;
@@ -422,7 +449,7 @@ button, input, select, textarea {
   .admin-sidebar-aside {
     width: 100% !important;
     min-height: auto !important;
-    padding: 1rem !important;
+    padding: 0.875rem 1rem !important;
     border-right: none !important;
     border-bottom: 1px solid rgba(228, 213, 193, 0.2) !important;
   }
@@ -430,17 +457,32 @@ button, input, select, textarea {
   .admin-nav-links {
     flex-direction: row !important;
     overflow-x: auto !important;
-    padding-bottom: 0.5rem !important;
+    padding-bottom: 0.25rem !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   .admin-dashboard-grid {
     grid-template-columns: 1fr !important;
   }
 
+  .products-page-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
   .hero-grid {
     grid-template-columns: 1fr !important;
-    gap: 2rem !important;
+    gap: 2.5rem !important;
     text-align: center !important;
+  }
+
+  .hero-title {
+    font-size: 2.2rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .admin-page-content {
+    padding: 1.25rem 1rem !important;
   }
 }
 
@@ -455,5 +497,9 @@ button, input, select, textarea {
 
   .section-padding {
     padding: 2rem 0 !important;
+  }
+
+  .hero-title {
+    font-size: 1.85rem !important;
   }
 }

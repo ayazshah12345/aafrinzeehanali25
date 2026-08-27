@@ -18,7 +18,7 @@ export function Products() {
         <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--sandel-900)' }}>Products Catalog</h1>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem' }}>
+      <div className="products-page-layout">
         {/* Sidebar Filters */}
         <aside style={{ background: '#ffffff', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--slate-200)', height: 'fit-content' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '1.1rem', marginBottom: '1.5rem' }}>
@@ -44,7 +44,7 @@ export function Products() {
 
         {/* Product Grid Area */}
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', background: '#ffffff', padding: '1rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--slate-200)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', background: '#ffffff', padding: '1rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--slate-200)', flexWrap: 'wrap', gap: '0.75rem' }}>
             <span style={{ fontSize: '0.9375rem', color: 'var(--slate-600)' }}>
               Showing <strong>{filteredProducts.length}</strong> products
             </span>
