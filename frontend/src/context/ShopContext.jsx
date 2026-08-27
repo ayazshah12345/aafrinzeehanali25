@@ -162,36 +162,55 @@ export function ShopProvider({ children }) {
   }, []);
 
   // Fetch orders — displays user placed orders, merging DB & local orders
-  const fetchOrders = useCallback(async () => {
-    setIsLoadingOrders(true);
-    const dbOrders = await api.getOrders();
-    const localOrders = getLocalOrders();
+  const fetchOrders = useCallback(async (isSilent = false) => {
+    if (!isSilent) setIsLoadingOrders(true);
+    try {
+      const dbOrders = await api.getOrders();
+      const localOrders = getLocalOrders();
 
-    if (Array.isArray(dbOrders) && dbOrders.length > 0) {
-      const formattedDb = dbOrders.map(formatOrder);
-      const dbOrderRefs = new Set(formattedDb.map((o) => String(o.id)));
-      const uniqueLocal = localOrders.filter((o) => !dbOrderRefs.has(String(o.id)));
-      const combined = [...formattedDb, ...uniqueLocal];
-      setOrders(combined);
-      saveLocalOrders(combined);
-    } else if (localOrders.length > 0) {
-      setOrders(localOrders);
+      if (Array.isArray(dbOrders) && dbOrders.length > 0) {
+        const formattedDb = dbOrders.map(formatOrder);
+        const dbOrderRefs = new Set(formattedDb.map((o) => String(o.id)));
+        const uniqueLocal = localOrders.filter((o) => !dbOrderRefs.has(String(o.id)));
+        const combined = [...formattedDb, ...uniqueLocal];
+        
+        setOrders((prev) => {
+          const nextJson = JSON.stringify(combined);
+          const prevJson = JSON.stringify(prev);
+          if (nextJson !== prevJson) {
+            saveLocalOrders(combined);
+            return combined;
+          }
+          return prev;
+        });
+      } else if (localOrders.length > 0) {
+        setOrders((prev) => {
+          const nextJson = JSON.stringify(localOrders);
+          const prevJson = JSON.stringify(prev);
+          return nextJson !== prevJson ? localOrders : prev;
+        });
+      }
+    } catch (err) {
+      console.warn('fetchOrders error:', err);
+    } finally {
+      if (!isSilent) setIsLoadingOrders(false);
     }
-    setIsLoadingOrders(false);
   }, []);
 
   useEffect(() => {
     fetchProducts();
-    fetchOrders();
+    fetchOrders(false);
 
-    // Fast live tracking polling from PostgreSQL every 2 seconds
+    // Fast live tracking polling from PostgreSQL silently every 3 seconds
     const interval = setInterval(() => {
-      fetchOrders();
-    }, 2000);
+      fetchOrders(true);
+    }, 3000);
 
-    const handleSync = () => {
-      fetchOrders();
-      fetchProducts();
+    const handleSync = (e) => {
+      if (!e || !e.key || e.key === 'afsoo_order_status_sync') {
+        fetchOrders(true);
+        fetchProducts();
+      }
     };
 
     window.addEventListener('order_updated', handleSync);
