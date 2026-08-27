@@ -107,6 +107,102 @@ export const api = {
     }
   },
 
+  // User Management Endpoints
+  getUsers: async () => {
+    try {
+      const res = await fetchApi('/admin/users');
+      if (!res.ok) return [];
+      const data = await res.json();
+      if (data && data.data && Array.isArray(data.data.users)) {
+        return data.data.users;
+      }
+      return [];
+    } catch (err) {
+      console.warn('Failed to fetch users from PostgreSQL:', err.message);
+      return [];
+    }
+  },
+
+  getUserById: async (id) => {
+    try {
+      const res = await fetchApi(`/users/${id}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data?.data?.user || null;
+    } catch (err) {
+      return null;
+    }
+  },
+
+  deleteUser: async (id) => {
+    try {
+      const res = await fetchApi(`/admin/users/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      return data.status === 'success';
+    } catch (err) {
+      return false;
+    }
+  },
+
+  // ----------------------------------------------------
+  // Cart Endpoints — DIRECT POSTGRESQL DATABASE
+  // ----------------------------------------------------
+  getCart: async () => {
+    try {
+      const res = await fetchApi('/cart');
+      if (!res.ok) return [];
+      const data = await res.json();
+      if (data && data.data && Array.isArray(data.data.cart)) {
+        return data.data.cart;
+      }
+      return [];
+    } catch (err) {
+      return [];
+    }
+  },
+
+  addToCart: async (productId, quantity = 1) => {
+    try {
+      const res = await fetchApi('/cart', {
+        method: 'POST',
+        body: JSON.stringify({ product_id: parseInt(productId, 10), quantity }),
+      });
+      return await res.json();
+    } catch (err) {
+      return null;
+    }
+  },
+
+  updateCartItem: async (itemId, quantity) => {
+    try {
+      const res = await fetchApi(`/cart/${itemId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ quantity }),
+      });
+      return await res.json();
+    } catch (err) {
+      return null;
+    }
+  },
+
+  removeCartItem: async (itemId) => {
+    try {
+      const res = await fetchApi(`/cart/${itemId}`, { method: 'DELETE' });
+      return await res.json();
+    } catch (err) {
+      return null;
+    }
+  },
+
+  clearCart: async () => {
+    try {
+      const res = await fetchApi('/cart', { method: 'DELETE' });
+      return await res.json();
+    } catch (err) {
+      return null;
+    }
+  },
+
   // ----------------------------------------------------
   // Product CRUD — DIRECT POSTGRESQL DATABASE
   // ----------------------------------------------------

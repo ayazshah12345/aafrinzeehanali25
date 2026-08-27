@@ -1,10 +1,20 @@
-uimport { Router } from 'express';
+import { Router } from 'express';
+import {
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from '../controllers/users.controller.js';
+import { verifyToken, requireAdmin } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-// Placeholder routes - database integration scheduled for future step
-router.get('/', (req, res) => {
-  res.json({ message: 'Users endpoint placeholder (DB integration coming next)' });
-});
+router.use(verifyToken);
+
+router.get('/', getAllUsers);
+router.get('/:id', getUserById);
+router.put('/:id', updateUser);
+router.delete('/:id', requireAdmin, deleteUser);
 
 export default router;
+

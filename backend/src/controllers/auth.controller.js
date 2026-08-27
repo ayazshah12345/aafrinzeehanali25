@@ -116,7 +116,25 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const result = await query('SELECT id, name, email, role, created_at FROM users WHERE id = $1', [req.user.id]);
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'User context missing' });
+    }
+
+    if (!/^\d+$/.test(String(req.user.id))) {
+      return res.json({
+        status: 'success',
+        data: {
+          user: {
+            id: req.user.id,
+            name: req.user.name || 'Customer User',
+            email: req.user.email || '',
+            role: req.user.role || 'customer',
+          },
+        },
+      });
+    }
+
+    const result = await query('SELECT id, name, email, role, created_at FROM users WHERE id = $1', [parseInt(req.user.id, 10)]);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Not Found', message: 'User not found' });
     }

@@ -30,6 +30,10 @@ export function ShopProvider({ children }) {
       } catch (e) {}
       return updated;
     });
+
+    if (currentUser && product.id && !isNaN(parseInt(product.id, 10))) {
+      api.addToCart(product.id, quantity);
+    }
   };
 
   const removeFromCart = (productId) => {
@@ -65,6 +69,9 @@ export function ShopProvider({ children }) {
     try {
       localStorage.removeItem('afsoo_cart');
     } catch (e) {}
+    if (currentUser) {
+      api.clearCart();
+    }
   };
   const [newOrdersCount, setNewOrdersCount] = useState(0);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
@@ -327,6 +334,14 @@ export function ShopProvider({ children }) {
 
     // Call REST API and save into PostgreSQL database
     const safeProductId = product && product.id && !isNaN(parseInt(product.id, 10)) ? parseInt(product.id, 10) : null;
+    const formattedItems = Array.isArray(items) && items.length > 0
+      ? items.map((it) => ({
+          product_id: it.product && it.product.id && !isNaN(parseInt(it.product.id, 10)) ? parseInt(it.product.id, 10) : null,
+          quantity: it.quantity || 1,
+          price: it.product ? it.product.price || 0 : 0,
+        })).filter((it) => it.product_id !== null)
+      : [];
+
     const res = await api.createOrder({
       shipping_name: customerName,
       email: userEmail,
@@ -336,6 +351,7 @@ export function ShopProvider({ children }) {
       product_id: safeProductId,
       quantity,
       total_amount: orderTotal,
+      items: formattedItems,
     });
 
     if (res) {

@@ -12,6 +12,7 @@ export const createOrder = async (req, res) => {
       quantity = 1,
       total_amount,
       payment_status = 'Paid via 9629217907',
+      items = [],
     } = req.body;
 
     if (!shipping_name || !shipping_phone || !shipping_address) {
@@ -31,7 +32,7 @@ export const createOrder = async (req, res) => {
     let calculatedTotal = isNaN(parsedTotal) ? 0 : parsedTotal;
     let productPrice = 0;
 
-    if (numericProductId) {
+    if (numericProductId && (!items || items.length === 0)) {
       const prodRes = await query('SELECT price FROM products WHERE id = $1', [numericProductId]);
       if (prodRes.rows.length > 0) {
         productPrice = parseFloat(prodRes.rows[0].price);
@@ -60,7 +61,20 @@ export const createOrder = async (req, res) => {
 
     const order = orderRes.rows[0];
 
-    if (numericProductId) {
+    // Process multiple items array if provided
+    if (Array.isArray(items) && items.length > 0) {
+      for (const item of items) {
+        const itemPid = item.product_id && !isNaN(parseInt(item.product_id, 10)) ? parseInt(item.product_id, 10) : null;
+        const itemQty = isNaN(parseInt(item.quantity, 10)) ? 1 : parseInt(item.quantity, 10);
+        const itemPrice = parseFloat(item.price || 0);
+        if (itemPid) {
+          await query(
+            'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)',
+            [order.id, itemPid, itemQty, itemPrice]
+          );
+        }
+      }
+    } else if (numericProductId) {
       await query(
         'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)',
         [order.id, numericProductId, numericQuantity, productPrice || calculatedTotal]
@@ -80,8 +94,13 @@ export const createOrder = async (req, res) => {
 
 export const getUserOrders = async (req, res) => {
   try {
-    const explicitUserId = req.query.user_id ? parseInt(req.query.user_id, 10) : null;
-    const explicitEmail = req.query.email ? req.query.email.trim().toLowerCase() : null;
+    const isAdmin = req.user && req.user.role === 'admin';
+    const explicitUserId = req.query.user_id
+      ? parseInt(req.query.user_id, 10)
+      : (!isAdmin && req.user && req.user.id && /^\d+$/.test(String(req.user.id)) ? parseInt(req.user.id, 10) : null);
+    const explicitEmail = req.query.email
+      ? req.query.email.trim().toLowerCase()
+      : (!isAdmin && req.user && req.user.email ? req.user.email.trim().toLowerCase() : null);
 
     let sql = `
       SELECT o.*, p.name AS product_name, p.image_url AS product_image

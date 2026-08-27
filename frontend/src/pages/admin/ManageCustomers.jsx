@@ -1,36 +1,78 @@
-import React, { useState } from 'react';
-import { Search, Mail, Calendar, Phone } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Mail, Calendar, Phone, ShieldCheck } from 'lucide-react';
 import AdminHeader from '../../components/admin/AdminHeader';
 import { useShop } from '../../context/ShopContext';
 import Badge from '../../components/common/Badge';
 import { formatCurrency } from '../../utils/formatters';
+import { api } from '../../services/api';
 
 export function ManageCustomers() {
   const { orders } = useShop();
   const [search, setSearch] = useState('');
+  const [dbUsers, setDbUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Aggregate customer accounts dynamically from PostgreSQL orders
+  useEffect(() => {
+    let isMounted = true;
+    const fetchUsers = async () => {
+      setLoading(true);
+      const users = await api.getUsers();
+      if (isMounted) {
+        setDbUsers(users);
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Merge registered users from PostgreSQL database with order statistics
   const customerMap = {};
+
+  // First populate registered accounts from DB
+  dbUsers.forEach((usr) => {
+    const key = (usr.email || usr.name || String(usr.id)).toLowerCase();
+    customerMap[key] = {
+      id: usr.id,
+      name: usr.name,
+      email: usr.email,
+      role: usr.role,
+      phone: '',
+      joinedDate: usr.created_at ? new Date(usr.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      ordersCount: 0,
+      totalSpent: 0,
+      isRegistered: true,
+    };
+  });
+
+  // Next aggregate order statistics
   orders.forEach((ord) => {
-    const key = ord.phone || ord.customer;
+    const key = (ord.email || ord.customer || String(ord.phone)).toLowerCase();
     if (!customerMap[key]) {
       customerMap[key] = {
         id: key,
         name: ord.customer,
-        phone: ord.phone,
         email: ord.email,
-        joinedDate: ord.date,
+        role: 'customer',
+        phone: ord.phone || '',
+        joinedDate: ord.date || new Date().toISOString().split('T')[0],
         ordersCount: 1,
         totalSpent: parseFloat(ord.total || 0),
+        isRegistered: false,
       };
     } else {
+      if (ord.phone && !customerMap[key].phone) {
+        customerMap[key].phone = ord.phone;
+      }
       customerMap[key].ordersCount += 1;
       customerMap[key].totalSpent += parseFloat(ord.total || 0);
     }
   });
 
   const customerList = Object.values(customerMap).filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
+    (c.name && c.name.toLowerCase().includes(search.toLowerCase())) ||
     (c.phone && c.phone.includes(search)) ||
     (c.email && c.email.toLowerCase().includes(search.toLowerCase()))
   );
@@ -102,7 +144,13 @@ export function ManageCustomers() {
                       <td style={{ color: 'var(--sandel-900)', fontWeight: 600 }}>{cust.ordersCount} orders</td>
                       <td style={{ fontWeight: 800, color: 'var(--success)' }}>{formatCurrency(cust.totalSpent)}</td>
                       <td>
-                        <Badge variant="success">Active Buyer</Badge>
+                        {cust.role === 'admin' ? (
+                          <Badge variant="primary"><ShieldCheck size={12} style={{ marginRight: '4px' }} /> Admin</Badge>
+                        ) : cust.ordersCount > 0 ? (
+                          <Badge variant="success">Active Buyer</Badge>
+                        ) : (
+                          <Badge variant="info">Registered User</Badge>
+                        )}
                       </td>
                     </tr>
                   ))}

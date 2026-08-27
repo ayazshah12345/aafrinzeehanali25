@@ -43,7 +43,11 @@ export const getAllProducts = async (req, res) => {
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await query('SELECT * FROM products WHERE id = $1', [id]);
+    if (!/^\d+$/.test(id)) {
+      return res.status(404).json({ error: 'Not Found', message: `Product with ID ${id} not found` });
+    }
+
+    const result = await query('SELECT * FROM products WHERE id = $1', [parseInt(id, 10)]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Not Found', message: `Product with ID ${id} not found` });
@@ -94,6 +98,11 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
+    if (!/^\d+$/.test(id)) {
+      return res.status(404).json({ error: 'Not Found', message: `Product with ID ${id} not found` });
+    }
+
+    const numericId = parseInt(id, 10);
     const { name, description, price, image, image_url, category, stock, sku } = req.body;
 
     const finalImageUrl = image_url || image;
@@ -111,7 +120,7 @@ export const updateProduct = async (req, res) => {
            sku = COALESCE($7, sku),
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $8 RETURNING *`,
-      [name, description, numericPrice, finalImageUrl, category, numericStock, sku, id]
+      [name, description, numericPrice, finalImageUrl, category, numericStock, sku, numericId]
     );
 
     if (result.rows.length === 0) {
@@ -132,12 +141,17 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
+    if (!/^\d+$/.test(id)) {
+      return res.status(404).json({ error: 'Not Found', message: `Product with ID ${id} not found` });
+    }
+
+    const numericId = parseInt(id, 10);
 
     // First clear foreign key references in order_items / cart_items
-    await query('UPDATE order_items SET product_id = NULL WHERE product_id = $1', [id]);
-    await query('DELETE FROM cart_items WHERE product_id = $1', [id]);
+    await query('UPDATE order_items SET product_id = NULL WHERE product_id = $1', [numericId]);
+    await query('DELETE FROM cart_items WHERE product_id = $1', [numericId]);
 
-    const result = await query('DELETE FROM products WHERE id = $1 RETURNING id', [id]);
+    const result = await query('DELETE FROM products WHERE id = $1 RETURNING id', [numericId]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Not Found', message: `Product with ID ${id} not found` });

@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.routes.js';
 import productsRoutes from './routes/products.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import ordersRoutes from './routes/orders.routes.js';
+import usersRoutes from './routes/users.routes.js';
 
 const app = express();
 
@@ -31,10 +32,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', ordersRoutes);
+app.use('/api/users', usersRoutes);
 
-// Admin route aliases matching PROMPT 2 requirements
+// Admin route aliases matching requirements
 app.use('/api/admin/products', productsRoutes);
 app.use('/api/admin/orders', ordersRoutes);
+app.use('/api/admin/users', usersRoutes);
 
 // Root route
 app.get('/', (req, res) => {
