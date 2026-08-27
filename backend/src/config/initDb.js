@@ -1,25 +1,74 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import { pool } from './db.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const SCHEMA_SQL_STATEMENTS = [
+  `CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'customer',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`,
+
+  `CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    image_url TEXT,
+    category VARCHAR(100),
+    stock INT DEFAULT 0,
+    sku VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)`,
+
+  `CREATE TABLE IF NOT EXISTS cart_items (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    product_id INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    quantity INT DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_user_product_cart UNIQUE(user_id, product_id)
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS orders (
+    id SERIAL PRIMARY KEY,
+    order_ref VARCHAR(100) UNIQUE NOT NULL,
+    user_id INT REFERENCES users(id) ON DELETE SET NULL,
+    email VARCHAR(255),
+    total_amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pending',
+    payment_status VARCHAR(100) DEFAULT 'Paid via 9629217907',
+    payment_screenshot_url TEXT,
+    shipping_name VARCHAR(255) NOT NULL,
+    shipping_phone VARCHAR(50) NOT NULL,
+    shipping_address TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_orders_email ON orders(email)`,
+  `CREATE INDEX IF NOT EXISTS idx_orders_order_ref ON orders(order_ref)`,
+
+  `CREATE TABLE IF NOT EXISTS order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id INT REFERENCES products(id) ON DELETE SET NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id)`,
+];
 
 export const initializeDatabase = async () => {
   console.log('🔄 Initializing PostgreSQL database tables...');
   try {
-    const schemaPath = path.join(__dirname, 'schema.sql');
-    const sql = fs.readFileSync(schemaPath, 'utf8');
-
-    // Split SQL by statement to execute safely
-    const statements = sql
-      .split(';')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-
-    for (const stmt of statements) {
+    for (const stmt of SCHEMA_SQL_STATEMENTS) {
       try {
         await pool.query(stmt);
       } catch (err) {
@@ -29,7 +78,6 @@ export const initializeDatabase = async () => {
       }
     }
 
-    // Ensure email column on orders table
     try {
       await pool.query('ALTER TABLE orders ADD COLUMN IF NOT EXISTS email VARCHAR(255)');
     } catch (e) {}

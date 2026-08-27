@@ -18,11 +18,25 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Normalize URL prefix for Vercel Serverless Function execution
-app.use((req, res, next) => {
+import { initializeDatabase } from './config/initDb.js';
+
+let isDbAutoInitialized = false;
+
+// Normalize URL prefix for Vercel Serverless Function execution & ensure DB tables
+app.use(async (req, res, next) => {
   if (!req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/health')) {
     req.url = '/api' + req.url;
   }
+
+  if (!isDbAutoInitialized) {
+    try {
+      await initializeDatabase();
+      isDbAutoInitialized = true;
+    } catch (err) {
+      console.warn('DB initialization notice:', err.message);
+    }
+  }
+
   next();
 });
 
