@@ -144,21 +144,37 @@ export function ShopProvider({ children }) {
   };
 
   // Fetch products — merges PostgreSQL DB products & user-added local products
-  const fetchProducts = useCallback(async () => {
-    setIsLoadingProducts(true);
-    const dbProducts = await api.getProducts();
-    const localItems = getLocalProducts();
+  const fetchProducts = useCallback(async (isSilent = false) => {
+    if (!isSilent) setIsLoadingProducts(true);
+    try {
+      const dbProducts = await api.getProducts();
+      const localItems = getLocalProducts();
 
-    if (Array.isArray(dbProducts) && dbProducts.length > 0) {
-      // Merge DB products with local items (avoiding duplicates)
-      const dbIds = new Set(dbProducts.map((p) => String(p.id)));
-      const uniqueLocal = localItems.filter((p) => !dbIds.has(String(p.id)));
-      const combined = [...dbProducts, ...uniqueLocal];
-      setProducts(combined);
-    } else {
-      setProducts(localItems);
+      if (Array.isArray(dbProducts) && dbProducts.length > 0) {
+        const dbIds = new Set(dbProducts.map((p) => String(p.id)));
+        const uniqueLocal = localItems.filter((p) => !dbIds.has(String(p.id)));
+        const combined = [...dbProducts, ...uniqueLocal];
+        setProducts((prev) => {
+          const prevStr = JSON.stringify(prev);
+          const nextStr = JSON.stringify(combined);
+          if (prevStr !== nextStr) {
+            saveLocalProducts(combined);
+            return combined;
+          }
+          return prev;
+        });
+      } else if (localItems.length > 0) {
+        setProducts((prev) => {
+          const prevStr = JSON.stringify(prev);
+          const nextStr = JSON.stringify(localItems);
+          return prevStr !== nextStr ? localItems : prev;
+        });
+      }
+    } catch (err) {
+      console.warn('fetchProducts error:', err);
+    } finally {
+      if (!isSilent) setIsLoadingProducts(false);
     }
-    setIsLoadingProducts(false);
   }, []);
 
   // Fetch orders — displays user placed orders, merging DB & local orders
@@ -198,18 +214,19 @@ export function ShopProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(false);
     fetchOrders(false);
 
-    // Fast live tracking polling from PostgreSQL silently every 3 seconds
+    // Fast live tracking polling from PostgreSQL silently every 3 seconds across all devices
     const interval = setInterval(() => {
       fetchOrders(true);
+      fetchProducts(true);
     }, 3000);
 
     const handleSync = (e) => {
       if (!e || !e.key || e.key === 'afsoo_order_status_sync') {
         fetchOrders(true);
-        fetchProducts();
+        fetchProducts(true);
       }
     };
 
@@ -259,6 +276,8 @@ export function ShopProvider({ children }) {
       return updated;
     });
 
+    await fetchProducts(true);
+
     return { product: createdProduct, isPostgres };
   };
 
@@ -295,6 +314,8 @@ export function ShopProvider({ children }) {
       return list;
     });
 
+    await fetchProducts(true);
+
     return { product: updatedProduct, isPostgres };
   };
 
@@ -307,6 +328,8 @@ export function ShopProvider({ children }) {
       saveLocalProducts(list);
       return list;
     });
+
+    await fetchProducts(true);
 
     return { success: true, isPostgres };
   };
