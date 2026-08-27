@@ -462,35 +462,18 @@ export function ShopProvider({ children }) {
       if (res && res.status === 'success' && res.data && res.data.user) {
         setCurrentUser(res.data.user);
         localStorage.setItem('afsoo_user', JSON.stringify(res.data.user));
-        return { success: true, message: 'Account created successfully in PostgreSQL!' };
+        return { success: true, message: 'Account created successfully!' };
       }
-      
-      // Local fallback account creation if server returns error or offline
-      const localUser = {
-        id: Date.now(),
-        name: name || 'Customer',
-        email: cleanEmail,
-        role: cleanEmail === 'afuzee0324@yahoo.com' ? 'admin' : 'customer',
-      };
-      setCurrentUser(localUser);
-      localStorage.setItem('afsoo_user', JSON.stringify(localUser));
-      localStorage.setItem('afsoo_auth_token', localUser.role === 'admin' ? 'admin_token_2026' : `token_${localUser.id}`);
-      return { success: true, message: 'Account created and logged in!' };
+      return { success: false, message: res?.message || res?.error || 'Registration failed' };
     } catch (err) {
-      const localUser = {
-        id: Date.now(),
-        name: name || 'Customer',
-        email: email ? email.trim().toLowerCase() : 'user@example.com',
-        role: 'customer',
-      };
-      setCurrentUser(localUser);
-      localStorage.setItem('afsoo_user', JSON.stringify(localUser));
-      localStorage.setItem('afsoo_auth_token', `token_${localUser.id}`);
-      return { success: true, message: 'Signed in successfully!' };
+      return { success: false, message: 'Registration failed. Please try again.' };
     }
   };
 
   const loginUser = async ({ email, password }) => {
+    // Purge any existing session before attempting verification
+    logoutUser();
+
     try {
       const cleanEmail = email ? email.trim().toLowerCase() : '';
       const res = await api.login({ email: cleanEmail, password });
@@ -501,8 +484,10 @@ export function ShopProvider({ children }) {
         return { success: true, message: 'Logged in successfully!' };
       }
 
+      logoutUser();
       return { success: false, message: res?.message || res?.error || 'Invalid email or password' };
     } catch (err) {
+      logoutUser();
       return { success: false, message: 'Invalid email or password' };
     }
   };

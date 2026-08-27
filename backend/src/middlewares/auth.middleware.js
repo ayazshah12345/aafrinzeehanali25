@@ -12,18 +12,6 @@ export const verifyToken = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
-  if (token === 'admin_token_2026') {
-    req.user = { id: 1, name: 'Aafrin Zeeshan Admin', email: 'afuzee0324@yahoo.com', role: 'admin' };
-    return next();
-  }
-
-  if (token.startsWith('token_')) {
-    const rawId = token.replace('token_', '');
-    const numericId = /^\d+$/.test(rawId) ? parseInt(rawId, 10) : 999999;
-    req.user = { id: numericId, name: 'Customer', email: 'customer@local.com', role: 'customer' };
-    return next();
-  }
-
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
     req.user = decoded;

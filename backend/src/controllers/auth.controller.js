@@ -62,19 +62,6 @@ export const login = async (req, res) => {
     const result = await query('SELECT * FROM users WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
     
     if (result.rows.length === 0) {
-      // If admin email doesn't exist yet, seed it dynamically
-      if (cleanEmail === 'afuzee0324@yahoo.com') {
-        const passwordHash = await bcrypt.hash(password, 10);
-        const adminRes = await query(
-          'INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING *',
-          ['Aafrin Zeeshan Admin', cleanEmail, passwordHash, 'admin']
-        );
-        const user = adminRes.rows[0];
-        const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, config.jwtSecret, { expiresIn: '7d' });
-        const { password_hash, ...userProfile } = user;
-        return res.json({ status: 'success', message: 'Admin authenticated', data: { user: userProfile, token } });
-      }
-
       return res.status(401).json({ error: 'Authentication Error', message: 'Invalid email or password' });
     }
 
