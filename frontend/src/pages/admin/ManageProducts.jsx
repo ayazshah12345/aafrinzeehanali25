@@ -18,7 +18,7 @@ export function ManageProducts() {
   );
 
   const handleDelete = async (id, name) => {
-    if (window.confirm(`Are you sure you want to delete "${name}" from PostgreSQL database?`)) {
+    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       await deleteProduct(id);
     }
   };
@@ -60,14 +60,14 @@ export function ManageProducts() {
           <div className="table-wrapper">
             {isLoadingProducts ? (
               <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--sandel-700)' }}>
-                Loading products from PostgreSQL database...
+                Loading products...
               </div>
             ) : filteredProducts.length === 0 ? (
               <div style={{ padding: '3.5rem', textAlign: 'center', color: 'var(--sandel-700)' }}>
                 <PackageOpen size={48} style={{ color: 'var(--primary)', marginBottom: '1rem' }} />
-                <h3 style={{ fontSize: '1.25rem', color: 'var(--sandel-900)', fontWeight: 800 }}>No Products in Database</h3>
+                <h3 style={{ fontSize: '1.25rem', color: 'var(--sandel-900)', fontWeight: 800 }}>No Products Found</h3>
                 <p style={{ margin: '0.5rem 0 1.5rem', fontSize: '0.9rem', color: 'var(--sandel-700)' }}>
-                  No products are currently in PostgreSQL. Click below to add your first store item!
+                  No products available. Click below to add your first store item!
                 </p>
                 <Link to="/admin/products/new" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
                   <Plus size={16} /> Add Product Now
@@ -115,7 +115,7 @@ export function ManageProducts() {
                         </Badge>
                       </td>
                       <td>
-                        <Badge variant="primary">Active in DB</Badge>
+                        <Badge variant="primary">Active</Badge>
                       </td>
                       <td style={{ textAlign: 'right' }}>
                         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>

@@ -27,7 +27,7 @@ export function ProductDetails() {
   if (isLoadingProducts) {
     return (
       <div className="container section-padding" style={{ textAlign: 'center', color: 'var(--slate-500)' }}>
-        Loading product details from PostgreSQL database...
+        Loading product details...
       </div>
     );
   }
@@ -38,7 +38,7 @@ export function ProductDetails() {
         <PackageOpen size={48} style={{ color: 'var(--slate-400)', marginBottom: '1rem' }} />
         <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--slate-800)' }}>Product Not Found</h2>
         <p style={{ color: 'var(--slate-500)', margin: '0.5rem 0 1.5rem' }}>
-          The requested product could not be found in the database.
+          The requested product could not be found.
         </p>
         <Link to="/products">
           <Button icon={ArrowLeft}>Back to Products Catalog</Button>

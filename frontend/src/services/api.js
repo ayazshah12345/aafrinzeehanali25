@@ -62,7 +62,7 @@ export const api = {
       });
       return await res.json();
     } catch (err) {
-      return { status: 'error', message: 'Failed to connect to PostgreSQL server.' };
+      return { status: 'error', message: 'Failed to connect to server.' };
     }
   },
 

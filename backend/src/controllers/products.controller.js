@@ -86,7 +86,7 @@ export const createProduct = async (req, res) => {
 
     return res.status(201).json({
       status: 'success',
-      message: 'Product created successfully in PostgreSQL database',
+      message: 'Product created successfully',
       data: { product: formatProduct(result.rows[0]) },
     });
   } catch (err) {
@@ -129,7 +129,7 @@ export const updateProduct = async (req, res) => {
 
     return res.json({
       status: 'success',
-      message: 'Product updated successfully in PostgreSQL database',
+      message: 'Product updated successfully',
       data: { product: formatProduct(result.rows[0]) },
     });
   } catch (err) {
@@ -159,7 +159,7 @@ export const deleteProduct = async (req, res) => {
 
     return res.json({
       status: 'success',
-      message: `Product with ID ${id} deleted successfully from PostgreSQL database`,
+      message: `Product with ID ${id} deleted successfully`,
     });
   } catch (err) {
     console.error('deleteProduct error:', err);

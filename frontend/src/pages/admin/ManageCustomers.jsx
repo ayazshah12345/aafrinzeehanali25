@@ -107,7 +107,7 @@ export function ManageCustomers() {
           <div className="table-wrapper">
             {customerList.length === 0 ? (
               <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--sandel-700)' }}>
-                No customer records found in database.
+                No customer records found.
               </div>
             ) : (
               <table className="data-table">

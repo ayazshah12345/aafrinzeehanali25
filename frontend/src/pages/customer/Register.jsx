@@ -48,7 +48,7 @@ export function Register() {
             <ShoppingBag size={28} />
           </div>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--slate-900)' }}>Create Customer Account</h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--slate-500)' }}>Register to save your information in PostgreSQL & track orders</p>
+          <p style={{ fontSize: '0.875rem', color: 'var(--slate-500)' }}>Register to create your account & track orders</p>
         </div>
 
         {error && (
@@ -101,7 +101,7 @@ export function Register() {
           </div>
 
           <Button type="submit" variant="primary" fullWidth size="lg" icon={UserPlus} disabled={isSubmitting} style={{ marginTop: '0.5rem' }}>
-            {isSubmitting ? 'Creating Account in DB...' : 'Create Account'}
+            {isSubmitting ? 'Creating Account...' : 'Create Account'}
           </Button>
         </form>
 

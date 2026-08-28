@@ -51,10 +51,10 @@ export function Checkout() {
       <div className="container section-padding" style={{ maxWidth: '600px', textAlign: 'center' }}>
         <Card style={{ padding: '3rem 2rem' }}>
           <CheckCircle2 size={64} style={{ color: 'var(--success)', marginBottom: '1.25rem' }} />
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Order Placed & Saved in Database!</h2>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Order Placed Successfully!</h2>
           <p style={{ color: 'var(--slate-600)', marginBottom: '1.5rem', lineHeight: '1.6' }}>
             Thank you, <strong>{confirmedOrder.customer}</strong>! Your order reference is{' '}
-            <strong style={{ color: 'var(--primary)' }}>{confirmedOrder.id}</strong>. It has been sent directly to the Admin Control Panel and stored in PostgreSQL.
+            <strong style={{ color: 'var(--primary)' }}>{confirmedOrder.id}</strong>. Your order has been received and is being processed.
           </p>
 
           <div style={{ background: 'var(--slate-50)', padding: '1rem', borderRadius: 'var(--radius-md)', textAlign: 'left', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
@@ -201,7 +201,7 @@ export function Checkout() {
             </div>
 
             <Button type="submit" variant="primary" size="lg" fullWidth icon={ShieldCheck} disabled={isSubmitting}>
-              {isSubmitting ? 'Saving Order to PostgreSQL DB...' : 'Place Order Now'}
+              {isSubmitting ? 'Placing Order...' : 'Place Order Now'}
             </Button>
           </Card>
         </div>

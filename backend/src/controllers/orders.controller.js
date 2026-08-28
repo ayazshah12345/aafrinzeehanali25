@@ -85,7 +85,7 @@ export const createOrder = async (req, res) => {
 
     return res.status(201).json({
       status: 'success',
-      message: 'Order placed successfully in PostgreSQL database with Pending status',
+      message: 'Order placed successfully with Pending status',
       data: { order },
     });
   } catch (err) {

@@ -61,14 +61,14 @@ export function Products() {
 
           {isLoadingProducts ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--slate-500)' }}>
-              Loading products from PostgreSQL database...
+              Loading products...
             </div>
           ) : filteredProducts.length === 0 ? (
             <div style={{ padding: '3.5rem 2rem', textAlign: 'center', background: '#ffffff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--slate-200)' }}>
               <PackageOpen size={48} style={{ color: 'var(--slate-400)', marginBottom: '1rem' }} />
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--slate-800)' }}>No Products Found</h3>
               <p style={{ color: 'var(--slate-500)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-                There are no products matching your search criteria in the database.
+                There are no products matching your search criteria.
               </p>
             </div>
           ) : (

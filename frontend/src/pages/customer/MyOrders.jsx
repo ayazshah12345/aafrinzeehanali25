@@ -81,7 +81,7 @@ export function MyOrders() {
 
       {isLoadingOrders ? (
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--slate-500)' }}>
-          Fetching latest order status from PostgreSQL database...
+          Fetching latest order status...
         </div>
       ) : myOrders.length === 0 ? (
         <Card style={{ padding: '3rem', textAlign: 'center' }}>
@@ -159,7 +159,7 @@ export function MyOrders() {
                     )}
                     <div>
                       <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: isCancelled ? '#991b1b' : isConfirmed ? '#065f46' : '#1e3a8a', margin: 0, marginBottom: '0.25rem' }}>
-                        📦 Live PostgreSQL Order Track Message
+                        📦 Live Order Tracking Update
                       </h4>
                       <p style={{ margin: 0, fontSize: '0.9rem', color: isCancelled ? '#7f1d1d' : isConfirmed ? '#047857' : '#1e40af', lineHeight: '1.5', fontWeight: 600 }}>
                         Product Name: <strong>{order.productName || 'Afsoo Product'}</strong> | Order ID: <strong>{order.id}</strong> | Current Status: <strong style={{ textDecoration: 'underline' }}>{order.status}</strong>
@@ -226,7 +226,7 @@ export function MyOrders() {
                   </div>
 
                   <div style={{ fontSize: '0.8125rem', color: 'var(--slate-400)' }}>
-                    Synced live with PostgreSQL Database
+                    Synced live in real time
                   </div>
                 </div>
               </Card>

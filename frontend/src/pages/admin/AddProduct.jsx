@@ -294,7 +294,7 @@ export function AddProduct() {
 
             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
               <Button type="submit" variant="primary" icon={Save} disabled={isSubmitting}>
-                {isSubmitting ? 'Saving to PostgreSQL...' : 'Save Product to DB'}
+                {isSubmitting ? 'Saving Product...' : 'Save Product'}
               </Button>
               <Link to="/admin/products" className="btn btn-secondary">
                 Cancel

@@ -322,7 +322,7 @@ export function EditProduct() {
 
             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
               <Button type="submit" variant="primary" icon={Save} disabled={isSubmitting}>
-                {isSubmitting ? 'Updating PostgreSQL...' : 'Update Product Details'}
+                {isSubmitting ? 'Saving Changes...' : 'Update Product Details'}
               </Button>
               <Link to="/admin/products" className="btn btn-secondary">
                 Cancel
