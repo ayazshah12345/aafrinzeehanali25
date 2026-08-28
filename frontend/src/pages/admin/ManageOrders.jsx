@@ -47,7 +47,7 @@ export function ManageOrders() {
         {newOrdersCount > 0 && (
           <div
             style={{
-              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+              background: 'linear-gradient(135deg, #312e81 0%, #4338ca 100%)',
               color: 'white',
               padding: '0.875rem 1.25rem',
               borderRadius: 'var(--radius-md)',
@@ -57,7 +57,7 @@ export function ManageOrders() {
               justify: 'space-between',
               gap: '1rem',
               flexWrap: 'wrap',
-              boxShadow: '0 4px 14px rgba(239, 68, 68, 0.3)',
+              boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', fontWeight: 700 }}>

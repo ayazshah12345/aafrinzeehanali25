@@ -58,7 +58,7 @@ export function AdminDashboard() {
         {pendingOrdersCount > 0 && (
           <div
             style={{
-              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+              background: 'linear-gradient(135deg, #312e81 0%, #4338ca 100%)',
               color: 'white',
               padding: '0.875rem 1.25rem',
               borderRadius: 'var(--radius-md)',
@@ -68,11 +68,11 @@ export function AdminDashboard() {
               justifyContent: 'space-between',
               gap: '1rem',
               flexWrap: 'wrap',
-              boxShadow: '0 4px 14px rgba(239, 68, 68, 0.3)',
+              boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', fontWeight: 700 }}>
-              <span style={{ background: 'white', color: '#ef4444', borderRadius: '50%', width: '24px', height: '24px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+              <span style={{ background: 'white', color: '#3730a3', borderRadius: '50%', width: '24px', height: '24px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
                 {pendingOrdersCount}
               </span>
               <span>Pending Customer Order Alert: {pendingOrdersCount} order(s) pending fulfillment!</span>
@@ -175,16 +175,13 @@ export function AdminDashboard() {
                   <Users size={18} /> Customer Directory
                 </Link>
                 
-                {/* Clear Sales Info Prominent Action */}
+                {/* Clear Sales Info Action */}
                 <button
                   onClick={() => setShowClearConfirm(true)}
-                  className="btn btn-block"
+                  className="btn btn-danger btn-block"
                   style={{
-                    justify: 'flex-start',
-                    background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
-                    color: '#ffffff',
+                    justifyContent: 'flex-start',
                     fontWeight: 800,
-                    boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)',
                     marginTop: '0.25rem',
                   }}
                 >

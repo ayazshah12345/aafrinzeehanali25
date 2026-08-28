@@ -25,13 +25,13 @@ export function AdminSidebar() {
               color: 'white',
               padding: '0.45rem',
               borderRadius: 'var(--radius-md)',
-              boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)',
+              boxShadow: '0 4px 12px rgba(79, 70, 229, 0.4)',
             }}>
               <Shield size={22} />
             </div>
             <div>
               <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>Afsoo Admin</h2>
-              <span style={{ fontSize: '0.72rem', color: '#f5ede2', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>Control Panel</span>
+              <span style={{ fontSize: '0.72rem', color: '#e0e7ff', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>Control Panel</span>
             </div>
           </div>
 
@@ -41,7 +41,7 @@ export function AdminSidebar() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              color: '#f5ede2',
+              color: '#e0e7ff',
               fontSize: '0.8rem',
               fontWeight: 700,
               textDecoration: 'none',
@@ -73,9 +73,9 @@ export function AdminSidebar() {
                   fontSize: '0.9rem',
                   textDecoration: 'none',
                   transition: 'var(--transition)',
-                  color: isActive ? '#ffffff' : '#f5ede2',
+                  color: isActive ? '#ffffff' : '#c7d2fe',
                   backgroundColor: isActive ? 'var(--primary)' : 'transparent',
-                  boxShadow: isActive ? '0 4px 14px rgba(220, 38, 38, 0.4)' : 'none',
+                  boxShadow: isActive ? '0 4px 14px rgba(79, 70, 229, 0.45)' : 'none',
                   whiteSpace: 'nowrap',
                 })}
               >

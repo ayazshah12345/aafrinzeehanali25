@@ -402,8 +402,8 @@ button, input, select, textarea {
 
 .admin-sidebar-aside {
   width: 260px;
-  background: linear-gradient(180deg, #5c0d0d 0%, #3d0808 100%);
-  border-right: 1px solid rgba(228, 213, 193, 0.2);
+  background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
