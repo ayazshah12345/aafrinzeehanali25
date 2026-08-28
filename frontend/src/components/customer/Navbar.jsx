@@ -19,14 +19,14 @@ export function Navbar() {
 
   return (
     <header style={{
-      background: 'rgba(255, 255, 255, 0.98)',
+      background: 'rgba(15, 23, 42, 0.95)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
-      borderBottom: '1px solid #e5d8c5',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      boxShadow: 'var(--shadow-sm)',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
     }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1.25rem', position: 'relative' }}>
         {/* Brand Logo & Avatar */}
@@ -37,8 +37,8 @@ export function Navbar() {
             height: '38px',
             borderRadius: '10px',
             overflow: 'hidden',
-            border: '2px solid #1d4ed8',
-            boxShadow: '0 4px 10px rgba(29, 78, 216, 0.2)',
+            border: '2px solid #38bdf8',
+            boxShadow: '0 4px 12px rgba(56, 189, 248, 0.3)',
             flexShrink: 0,
           }}>
             <img
@@ -47,8 +47,8 @@ export function Navbar() {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
-          <span style={{ fontWeight: 800, fontSize: '1.25rem', color: '#0f172a', letterSpacing: '-0.02em' }}>
-            Afsoo<span style={{ color: '#1d4ed8' }}>Commerce</span>
+          <span style={{ fontWeight: 800, fontSize: '1.25rem', color: '#ffffff', letterSpacing: '-0.02em' }}>
+            Afsoo<span style={{ color: '#38bdf8' }}>Commerce</span>
           </span>
         </Link>
 
@@ -63,47 +63,48 @@ export function Navbar() {
             style={{
               paddingLeft: '2.4rem',
               borderRadius: 'var(--radius-full)',
-              background: 'var(--sandel-50)',
-              border: '1px solid var(--sandel-300)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#ffffff',
               fontSize: '0.85rem',
             }}
           />
-          <Search size={15} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--sandel-600)' }} />
+          <Search size={15} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: '#cbd5e1' }} />
         </form>
 
         {/* Desktop Navigation Links */}
         <nav className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          <Link to="/" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem' }}>
+          <Link to="/" style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.9rem' }}>
             Home
           </Link>
-          <Link to="/products" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem' }}>
+          <Link to="/products" style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.9rem' }}>
             Products
           </Link>
-          <Link to="/orders" style={{ fontWeight: 700, color: 'var(--sandel-900)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <Package size={16} style={{ color: 'var(--primary)' }} /> My Orders
+          <Link to="/orders" style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Package size={16} style={{ color: '#38bdf8' }} /> My Orders
           </Link>
           
-          <Link to="/cart" style={{ position: 'relative', display: 'flex', alignItems: 'center', color: 'var(--sandel-900)', padding: '0.35rem' }} title="Shopping Cart">
+          <Link to="/cart" style={{ position: 'relative', display: 'flex', alignItems: 'center', color: '#ffffff', padding: '0.35rem' }} title="Shopping Cart">
             <ShoppingCart size={21} />
           </Link>
 
           {currentUser ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', borderLeft: '1px solid var(--sandel-300)', paddingLeft: '1rem' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', borderLeft: '1px solid rgba(255, 255, 255, 0.15)', paddingLeft: '1rem' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#38bdf8' }}>
                 Hi, {currentUser.name || currentUser.email.split('@')[0]}
               </span>
               <button
                 onClick={logoutUser}
                 className="btn btn-outline btn-sm"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: '0.3rem 0.6rem', fontSize: '0.8rem', background: 'rgba(255,255,255,0.1)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.2)' }}
                 title="Sign Out"
               >
                 <LogOut size={13} /> Exit
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', borderLeft: '1px solid var(--sandel-300)', paddingLeft: '0.875rem' }}>
-              <Link to="/login" className="btn btn-outline btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.35rem 0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', borderLeft: '1px solid rgba(255, 255, 255, 0.15)', paddingLeft: '0.875rem' }}>
+              <Link to="/login" className="btn btn-outline btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.35rem 0.75rem', background: 'rgba(255,255,255,0.1)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.2)' }}>
                 <User size={14} /> Sign In
               </Link>
               <Link to="/register" className="btn btn-primary btn-sm" style={{ fontWeight: 800, padding: '0.35rem 0.75rem' }}>
@@ -115,18 +116,18 @@ export function Navbar() {
           <Link to="/admin/login" style={{
             fontSize: '0.8rem',
             fontWeight: 800,
-            color: 'var(--sandel-900)',
+            color: '#ffffff',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.35rem',
             padding: '0.4rem 0.8rem',
             borderRadius: 'var(--radius-full)',
-            background: 'var(--sandel-200)',
-            border: '1px solid var(--sandel-300)',
+            background: 'rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
             textDecoration: 'none',
             boxShadow: 'var(--shadow-sm)',
           }}>
-            <Shield size={14} style={{ color: 'var(--primary)' }} /> Admin Portal
+            <Shield size={14} style={{ color: '#38bdf8' }} /> Admin Portal
           </Link>
         </nav>
 
