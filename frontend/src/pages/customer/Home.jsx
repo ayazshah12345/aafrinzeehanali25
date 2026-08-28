@@ -60,12 +60,12 @@ export function Home() {
 
             {/* Giant Luxury Heading */}
             <h1 className="hero-title">
-              Experience Premium <br />
+              Experience Royal <br />
               <span style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, #f5ede2 50%, #efe5d5 100%)',
+                background: 'linear-gradient(135deg, #00f2fe 0%, #c084fc 50%, #38bdf8 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3))'
+                filter: 'drop-shadow(0 0 15px rgba(0, 242, 254, 0.6))'
               }}>
                 Shopping Precision.
               </span>

@@ -139,58 +139,61 @@ export function MyOrders() {
                 <div
                   style={{
                     background: isCancelled
-                      ? 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)'
+                      ? 'rgba(248, 113, 113, 0.15)'
                       : isConfirmed
-                      ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)'
-                      : 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-                    border: `1.5px solid ${isCancelled ? '#ef4444' : isConfirmed ? '#10b981' : '#3b82f6'}`,
+                      ? 'rgba(52, 211, 153, 0.15)'
+                      : 'rgba(56, 189, 248, 0.15)',
+                    border: `1.5px solid ${isCancelled ? '#f87171' : isConfirmed ? '#34d399' : '#00f2fe'}`,
                     borderRadius: 'var(--radius-md)',
-                    padding: '1rem 1.25rem',
+                    padding: '1.15rem 1.25rem',
                     marginBottom: '1.5rem',
+                    boxShadow: isConfirmed ? '0 0 15px rgba(52, 211, 153, 0.2)' : '0 0 15px rgba(0, 242, 254, 0.2)',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                     {isCancelled ? (
-                      <XCircle size={22} style={{ color: '#dc2626', marginTop: '2px', flexShrink: 0 }} />
+                      <XCircle size={24} style={{ color: '#f87171', marginTop: '2px', flexShrink: 0 }} />
                     ) : isConfirmed ? (
-                      <PackageCheck size={22} style={{ color: '#059669', marginTop: '2px', flexShrink: 0 }} />
+                      <PackageCheck size={24} style={{ color: '#34d399', marginTop: '2px', flexShrink: 0 }} />
                     ) : (
-                      <Clock size={22} style={{ color: '#2563eb', marginTop: '2px', flexShrink: 0 }} />
+                      <Clock size={24} style={{ color: '#00f2fe', marginTop: '2px', flexShrink: 0 }} />
                     )}
                     <div>
-                      <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: isCancelled ? '#991b1b' : isConfirmed ? '#065f46' : '#1e3a8a', margin: 0, marginBottom: '0.25rem' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 800, color: isCancelled ? '#f87171' : isConfirmed ? '#34d399' : '#00f2fe', margin: 0, marginBottom: '0.35rem', textShadow: '0 0 8px currentColor' }}>
                         📦 Live Order Tracking Update
                       </h4>
-                      <p style={{ margin: 0, fontSize: '0.9rem', color: isCancelled ? '#7f1d1d' : isConfirmed ? '#047857' : '#1e40af', lineHeight: '1.5', fontWeight: 600 }}>
-                        Product Name: <strong>{order.productName || 'Afsoo Product'}</strong> | Order ID: <strong>{order.id}</strong> | Current Status: <strong style={{ textDecoration: 'underline' }}>{order.status}</strong>
+                      <p style={{ margin: 0, fontSize: '0.95rem', color: '#f8fafc', lineHeight: '1.6', fontWeight: 600 }}>
+                        Product Name: <strong style={{ color: '#00f2fe' }}>{order.productName || 'Afsoo Product'}</strong> | Order ID: <strong style={{ color: '#c084fc' }}>{order.id}</strong> | Status: <strong style={{ textDecoration: 'underline', color: isCancelled ? '#f87171' : isConfirmed ? '#34d399' : '#38bdf8' }}>
+                          {order.status === 'Delivered' || order.status === 'Completed' ? '🎉 Delivered' : order.status === 'Shipped' ? '🚚 Shipped' : order.status === 'Processing' ? '⚙️ Processing' : order.status === 'Order Confirmed' ? '✅ Order Confirmed' : order.status === 'Cancelled' ? '❌ Cancelled' : '⏳ Pending'}
+                        </strong>
                       </p>
                       {isConfirmed && (
-                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#065f46', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                          <CheckCircle2 size={16} /> Admin has confirmed your product order! It is now being processed for delivery.
+                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#34d399', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                          <CheckCircle2 size={16} /> ✅ Admin has confirmed your order! It is now being processed for delivery.
                         </div>
                       )}
                       {isCancelled && (
-                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#991b1b', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                          <AlertCircle size={16} /> This product order was cancelled by the store administrator.
+                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#f87171', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                          <AlertCircle size={16} /> ❌ Order was cancelled by store administrator.
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Real-time Order Progress Steps */}
+                {/* Real-time Order Progress Steps with Emojis */}
                 {!isCancelled && (
-                  <div style={{ marginBottom: '1.25rem', padding: '0 0.5rem' }}>
-                    <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--slate-500)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Fulfillment Progress Tracker
+                  <div style={{ marginBottom: '1.5rem', padding: '0 0.25rem' }}>
+                    <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: '#00f2fe', marginBottom: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.06em', textShadow: '0 0 8px rgba(0, 242, 254, 0.4)' }}>
+                      ⚡ Real-Time Fulfillment Tracker
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', position: 'relative' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem', position: 'relative' }}>
                       {[
-                        { label: 'Order Placed', step: 1 },
-                        { label: 'Order Confirmed', step: 2 },
-                        { label: 'Shipped / Processing', step: 3 },
-                        { label: 'Delivered', step: 4 },
+                        { label: 'Order Placed', emoji: '📝', step: 1 },
+                        { label: 'Order Confirmed', emoji: '✅', step: 2 },
+                        { label: 'Shipped / Processing', emoji: '🚚⚙️', step: 3 },
+                        { label: 'Delivered', emoji: '🎉', step: 4 },
                       ].map((st) => {
                         const isActive = stepIndex >= st.step;
                         const isCurrent = stepIndex === st.step;
@@ -200,18 +203,20 @@ export function MyOrders() {
                             key={st.step}
                             style={{
                               textAlign: 'center',
-                              background: isActive ? (isCurrent ? 'var(--primary)' : 'var(--slate-100)') : 'var(--slate-50)',
-                              color: isActive ? (isCurrent ? 'white' : 'var(--slate-800)') : 'var(--slate-400)',
-                              border: `1px solid ${isActive ? 'var(--primary)' : 'var(--slate-200)'}`,
+                              background: isCurrent ? 'var(--grad-primary)' : isActive ? '#1e2942' : '#0d1322',
+                              color: isCurrent ? '#05070e' : isActive ? '#ffffff' : '#64748b',
+                              border: `1px solid ${isCurrent ? '#00f2fe' : isActive ? '#38bdf8' : '#1e2942'}`,
                               borderRadius: 'var(--radius-md)',
-                              padding: '0.625rem 0.5rem',
-                              fontWeight: isCurrent ? 800 : 600,
-                              fontSize: '0.8125rem',
+                              padding: '0.75rem 0.5rem',
+                              fontWeight: isCurrent ? 800 : 700,
+                              fontSize: '0.85rem',
+                              boxShadow: isCurrent ? '0 0 15px rgba(0, 242, 254, 0.5)' : 'none',
                               transition: 'all 0.3s ease',
                             }}
                           >
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8, marginBottom: '0.1rem' }}>Step {st.step}</div>
-                            <div>{st.label}</div>
+                            <div style={{ fontSize: '1.25rem', marginBottom: '0.2rem' }}>{st.emoji}</div>
+                            <div style={{ fontSize: '0.72rem', opacity: 0.85, textTransform: 'uppercase', fontWeight: 800 }}>Step {st.step}</div>
+                            <div style={{ fontSize: '0.8125rem' }}>{st.label}</div>
                           </div>
                         );
                       })}
@@ -220,13 +225,13 @@ export function MyOrders() {
                 )}
 
                 {/* Footer Customer Info */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--slate-100)' }}>
-                  <div style={{ fontSize: '0.875rem', color: 'var(--slate-600)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <PhoneCall size={16} style={{ color: 'var(--primary)' }} /> Contact Helpline: <strong>9629217907</strong>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid #1e2942' }}>
+                  <div style={{ fontSize: '0.875rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <PhoneCall size={16} style={{ color: '#00f2fe' }} /> Helpline: <strong style={{ color: '#ffffff' }}>9629217907</strong>
                   </div>
 
-                  <div style={{ fontSize: '0.8125rem', color: 'var(--slate-400)' }}>
-                    Synced live in real time
+                  <div style={{ fontSize: '0.8125rem', color: '#00f2fe', fontWeight: 700, textShadow: '0 0 6px rgba(0, 242, 254, 0.4)' }}>
+                    ⚡ Synced Live in Real Time
                   </div>
                 </div>
               </Card>

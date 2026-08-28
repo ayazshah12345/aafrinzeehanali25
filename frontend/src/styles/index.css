@@ -5,72 +5,82 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Brand Primary Royal Indigo & Amethyst Scale */
-  --primary: #4f46e5;         /* Vibrant Royal Indigo */
-  --primary-hover: #4338ca;   /* Deep Royal Indigo */
-  --primary-light: #e0e7ff;   /* Soft Lavender Indigo Tint */
-  --primary-dark: #3730a3;    /* Midnight Indigo */
-  --primary-glow: rgba(79, 70, 229, 0.35);
+  /* Brand Primary Royal Neon & Electric Sapphire Scale */
+  --primary: #00f2fe;         /* Electric Neon Cyan */
+  --primary-hover: #38bdf8;   /* Bright Neon Sky */
+  --primary-light: rgba(0, 242, 254, 0.15); /* Soft Glow Tint */
+  --primary-dark: #0284c7;    /* Deep Electric Blue */
+  --primary-glow: rgba(0, 242, 254, 0.5);
 
-  --secondary: #3730a3;
-  --secondary-hover: #312e81;
+  --secondary: #a855f7;       /* Electric Purple / Royal Amethyst */
+  --secondary-hover: #9333ea;
 
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
+  --accent: #38bdf8;
+  --accent-hover: #0284c7;
 
-  /* Sandalwood (Sandel) Color Scale - Soft Cream & Warm Ivory */
-  --sandel-50:  #fdfbf7;      /* Sandel Lightest Tint */
-  --sandel-100: #faf6f0;      /* Page Background Sandel */
-  --sandel-200: #f4ebd9;      /* Soft Card Sandel */
-  --sandel-300: #e8d9bf;      /* Border Sandel */
-  --sandel-400: #d4c1a0;      /* Medium Sandel */
-  --sandel-500: #b59e7a;      /* Warm Sandel */
-  --sandel-600: #927a58;      /* Deep Sandel Accent */
-  --sandel-700: #5f4c33;      /* Muted Sandel Text */
-  --sandel-800: #3d2d1c;      /* Dark Sandel Text */
-  --sandel-900: #1c1106;      /* Deepest Heading Sandel */
+  --neon-cyan: #00f2fe;
+  --neon-purple: #c084fc;
+  --neon-emerald: #34d399;
+  --neon-gold: #fbbf24;
+
+  /* Royal Midnight Dark Palette */
+  --sandel-50:  #1e293b;
+  --sandel-100: #0b0f19;      /* Main Page Dark Background */
+  --sandel-200: #151c2e;      /* Card Background Dark */
+  --sandel-300: #1e2942;      /* Border Dark */
+  --sandel-400: #334155;
+  --sandel-500: #64748b;
+  --sandel-600: #94a3b8;
+  --sandel-700: #cbd5e1;      /* Muted Text */
+  --sandel-800: #e2e8f0;      /* Body Text */
+  --sandel-900: #ffffff;      /* High Contrast Heading Text */
 
   /* Neutral Dark Scale */
-  --slate-900: #0f172a;
-  --slate-800: #1e293b;
-  --slate-700: #334155;
-  --slate-600: #475569;
-  --slate-500: #64748b;
-  --slate-400: #94a3b8;
-  --slate-300: #cbd5e1;
-  --slate-200: #e2e8f0;
-  --slate-100: #f1f5f9;
-  --slate-50:  #f8fafc;
+  --slate-900: #ffffff;
+  --slate-800: #f1f5f9;
+  --slate-700: #e2e8f0;
+  --slate-600: #cbd5e1;
+  --slate-500: #94a3b8;
+  --slate-400: #64748b;
+  --slate-300: #334155;
+  --slate-200: #1e2942;
+  --slate-100: #151c2e;
+  --slate-50:  #0b0f19;
 
-  /* Pure White */
-  --white: #ffffff;
+  /* Pure Whites & Darks */
+  --white: #151c2e;
+  --white-pure: #ffffff;
 
   /* Status Colors */
-  --success: #10b981;
-  --success-bg: #ecfdf5;
-  --warning: #f59e0b;
-  --warning-bg: #fffbeb;
-  --danger: #ef4444;
-  --danger-bg: #fef2f2;
-  --info: #06b6d4;
-  --info-bg: #ecfeff;
+  --success: #34d399;
+  --success-bg: rgba(52, 211, 153, 0.18);
+  --warning: #fbbf24;
+  --warning-bg: rgba(251, 191, 36, 0.18);
+  --danger: #f87171;
+  --danger-bg: rgba(248, 113, 113, 0.18);
+  --info: #38bdf8;
+  --info-bg: rgba(56, 189, 248, 0.18);
 
   /* Admin Dashboard Theme */
-  --admin-bg: #faf6f0;
-  --admin-card: #ffffff;
-  --admin-border: #e8d9bf;
-  --admin-sidebar: #1e1b4b;
-  --admin-sidebar-hover: #312e81;
-  --admin-text: #1c1106;
-  --admin-muted: #5f4c33;
+  --admin-bg: #0b0f19;
+  --admin-card: #151c2e;
+  --admin-border: #1e2942;
+  --admin-sidebar: #070a12;
+  --admin-sidebar-hover: #1e2942;
+  --admin-text: #ffffff;
+  --admin-muted: #cbd5e1;
 
   /* Luxury Gradients */
-  --grad-hero: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #3730a3 75%, #4f46e5 100%);
-  --grad-primary: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-  --grad-emerald: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --grad-sandel: linear-gradient(135deg, #fdfbf7 0%, #faf6f0 50%, #f4ebd9 100%);
-  --grad-card: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
-  --grad-glow: radial-gradient(circle, rgba(79, 70, 229, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+  --grad-hero: linear-gradient(135deg, #05070e 0%, #0b0f19 40%, #151c2e 75%, #1e1b4b 100%);
+  --grad-primary: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  --grad-royal: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+  --grad-neon-text: linear-gradient(135deg, #00f2fe 0%, #c084fc 50%, #38bdf8 100%);
+  --grad-card: linear-gradient(180deg, #151c2e 0%, #0d1322 100%);
+  --grad-glow: radial-gradient(circle, rgba(0, 242, 254, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+
+  /* Neon Text & Glow Utilities */
+  --neon-glow-cyan: 0 0 12px rgba(0, 242, 254, 0.7), 0 0 24px rgba(0, 242, 254, 0.35);
+  --neon-glow-purple: 0 0 12px rgba(192, 132, 252, 0.7), 0 0 24px rgba(192, 132, 252, 0.35);
 
   /* Geometry & Radius */
   --radius-sm: 8px;
@@ -80,10 +90,10 @@
   --radius-full: 9999px;
 
   /* Luxurious Multi-layered Ambient Shadows */
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 10px 25px -5px rgba(79, 70, 229, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 20px 40px -12px rgba(79, 70, 229, 0.22), 0 8px 16px -4px rgba(15, 23, 42, 0.06);
-  --shadow-xl: 0 30px 60px -15px rgba(55, 48, 163, 0.3), 0 12px 24px -6px rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px -5px rgba(0, 242, 254, 0.2), 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 45px -10px rgba(0, 242, 254, 0.3), 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 30px 60px -15px rgba(168, 85, 247, 0.4), 0 12px 30px rgba(0, 0, 0, 0.7);
 
   /* Fonts & Transitions */
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -185,15 +195,29 @@ button, input, select, textarea {
 .hover-lift:hover {
   transform: translateY(-6px) scale(1.01);
   box-shadow: var(--shadow-lg);
-  border-color: rgba(225, 29, 72, 0.35) !important;
+  border-color: rgba(0, 242, 254, 0.45) !important;
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(21, 28, 46, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--sandel-300);
   box-shadow: var(--shadow-md);
+}
+
+.neon-text-cyan {
+  background: linear-gradient(135deg, #00f2fe 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+}
+
+.neon-text-purple {
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.5));
 }
 
 /* UI Buttons in Creative Red, White & Sandel Theme */
@@ -216,51 +240,53 @@ button, input, select, textarea {
 
 .btn-primary {
   background: var(--grad-primary);
-  color: #ffffff;
-  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.35);
+  color: #05070e;
+  font-weight: 800;
+  box-shadow: 0 4px 18px rgba(0, 242, 254, 0.4);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #be123c 0%, #9f1239 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(190, 18, 60, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 242, 254, 0.6);
 }
 
 .btn-secondary {
-  background-color: var(--sandel-200);
-  color: var(--sandel-900);
-  border-color: var(--sandel-300);
+  background-color: #1e2942;
+  color: #ffffff;
+  border-color: #334155;
 }
 
 .btn-secondary:hover {
-  background-color: var(--sandel-300);
-  color: var(--sandel-900);
+  background-color: #334155;
+  color: #ffffff;
   transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 
 .btn-outline {
-  background: #ffffff;
+  background: #151c2e;
   border-color: var(--primary);
   color: var(--primary);
-  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 242, 254, 0.15);
 }
 
 .btn-outline:hover {
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  border-color: var(--primary-dark);
+  background: rgba(0, 242, 254, 0.15);
+  color: #ffffff;
+  border-color: var(--primary-hover);
   transform: translateY(-1px);
 }
 
 .btn-danger {
   background-color: var(--danger);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 12px rgba(248, 113, 113, 0.35);
 }
 
 .btn-danger:hover {
-  background-color: var(--primary-dark);
+  background-color: #dc2626;
 }
 
 .btn-sm {
@@ -289,14 +315,14 @@ button, input, select, textarea {
   border-radius: var(--radius-full);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.badge-primary { background: var(--primary-light); color: var(--primary-dark); border: 1px solid rgba(225, 29, 72, 0.25); }
-.badge-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); }
-.badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.25); }
-.badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.25); }
-.badge-info { background: var(--info-bg); color: var(--info); border: 1px solid rgba(6, 182, 212, 0.25); }
+.badge-primary { background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.4); text-shadow: 0 0 8px rgba(0, 242, 254, 0.5); }
+.badge-success { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); text-shadow: 0 0 8px rgba(52, 211, 153, 0.5); }
+.badge-warning { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); text-shadow: 0 0 8px rgba(251, 191, 36, 0.5); }
+.badge-danger { background: rgba(248, 113, 113, 0.15); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.4); text-shadow: 0 0 8px rgba(248, 113, 113, 0.5); }
+.badge-info { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
 
 /* Creative Product & Feature Cards */
 .card {
@@ -310,7 +336,7 @@ button, input, select, textarea {
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  border-color: rgba(225, 29, 72, 0.35);
+  border-color: rgba(0, 242, 254, 0.45);
 }
 
 /* Form Controls */
@@ -324,7 +350,7 @@ button, input, select, textarea {
 .form-label {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--sandel-900);
+  color: #f8fafc;
 }
 
 .form-input, .form-select, .form-textarea {
@@ -334,14 +360,14 @@ button, input, select, textarea {
   border-radius: var(--radius-md);
   outline: none;
   transition: var(--transition);
-  background: #ffffff;
-  color: var(--sandel-900);
+  background: #0d1322;
+  color: #ffffff;
   font-weight: 600;
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.25);
 }
 
 /* Admin Dashboard Elements */
@@ -352,7 +378,7 @@ button, input, select, textarea {
 }
 
 .admin-card {
-  background-color: #ffffff;
+  background-color: #151c2e;
   border: 1px solid var(--sandel-300);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
@@ -377,21 +403,21 @@ button, input, select, textarea {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--sandel-900);
+  color: #00f2fe;
   border-bottom: 2px solid var(--sandel-300);
-  background-color: var(--sandel-200);
+  background-color: #0f172a;
 }
 
 .data-table td {
   padding: 1.1rem;
-  border-bottom: 1px solid var(--sandel-200);
+  border-bottom: 1px solid #1e2942;
   font-size: 0.9375rem;
-  color: var(--sandel-900);
+  color: #f8fafc;
   transition: var(--transition-fast);
 }
 
 .data-table tbody tr:hover td {
-  background-color: var(--sandel-50);
+  background-color: #1e2942;
 }
 
 /* Layout & Admin Container Wrappers */
