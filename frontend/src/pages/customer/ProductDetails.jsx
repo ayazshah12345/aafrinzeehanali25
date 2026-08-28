@@ -56,8 +56,8 @@ export function ProductDetails() {
       <div style={{ background: '#ffffff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--slate-200)', padding: '2rem' }} className="grid grid-cols-2 gap-8">
         {/* Product Image Gallery Preview */}
         <div>
-          <div style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden', height: '420px', background: 'var(--slate-100)', marginBottom: '1rem' }}>
-            <img src={product.image || product.image_url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80'} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden', height: '420px', background: '#ffffff', border: '1px solid var(--slate-200)', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+            <img src={product.image || product.image_url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80'} alt={product.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
           </div>
         </div>
 

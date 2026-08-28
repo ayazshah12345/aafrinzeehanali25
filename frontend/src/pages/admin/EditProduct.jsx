@@ -255,8 +255,8 @@ export function EditProduct() {
               />
 
               {imagePreview ? (
-                <div style={{ position: 'relative', width: '220px', height: '220px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--sandel-300)', background: 'var(--sandel-100)' }}>
-                  <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'relative', width: '220px', height: '220px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--sandel-300)', background: '#ffffff', padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                   <button
                     type="button"
                     onClick={handleRemoveImage}

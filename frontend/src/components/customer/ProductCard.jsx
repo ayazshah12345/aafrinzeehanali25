@@ -21,16 +21,16 @@ export function ProductCard({ product }) {
         style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', background: '#ffffff', border: '1px solid var(--sandel-300)' }}
       >
         {/* Product Image & Badges */}
-        <div style={{ position: 'relative', height: '230px', overflow: 'hidden', background: 'var(--sandel-100)' }}>
+        <div style={{ position: 'relative', height: '230px', overflow: 'hidden', background: '#ffffff', padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             src={displayImage}
             alt={name}
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              objectFit: 'contain',
               transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-              transform: isHovered ? 'scale(1.06)' : 'scale(1)',
+              transform: isHovered ? 'scale(1.05)' : 'scale(1)',
             }}
           />
           

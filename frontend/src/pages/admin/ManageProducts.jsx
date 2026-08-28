@@ -94,7 +94,7 @@ export function ManageProducts() {
                           <img
                             src={prod.image || prod.image_url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80'}
                             alt={prod.name}
-                            style={{ width: '44px', height: '44px', objectFit: 'cover', borderRadius: 'var(--radius-md)', background: 'var(--sandel-100)' }}
+                            style={{ width: '44px', height: '44px', objectFit: 'contain', padding: '2px', borderRadius: 'var(--radius-md)', background: '#ffffff', border: '1px solid var(--sandel-300)' }}
                           />
                           <div>
                             <div style={{ fontWeight: 800, color: 'var(--sandel-900)' }}>{prod.name}</div>

@@ -5,30 +5,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Brand Primary Red Scale - Ultra Rich Crimson & Rose */
-  --primary: #e11d48;         /* Rose Crimson Red */
-  --primary-hover: #be123c;   /* Deep Ruby */
-  --primary-light: #ffe4e6;   /* Soft Rose Light Tint */
-  --primary-dark: #9f1239;    /* Dark Wine Wine */
-  --primary-glow: rgba(225, 29, 72, 0.4);
+  /* Brand Primary Royal Indigo & Amethyst Scale */
+  --primary: #4f46e5;         /* Vibrant Royal Indigo */
+  --primary-hover: #4338ca;   /* Deep Royal Indigo */
+  --primary-light: #e0e7ff;   /* Soft Lavender Indigo Tint */
+  --primary-dark: #3730a3;    /* Midnight Indigo */
+  --primary-glow: rgba(79, 70, 229, 0.35);
 
-  --secondary: #9f1239;
-  --secondary-hover: #881337;
+  --secondary: #3730a3;
+  --secondary-hover: #312e81;
 
-  --accent: #f43f5e;
-  --accent-hover: #e11d48;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
 
-  /* Sandalwood (Sandel) Color Scale - Warm Ivory & Sandel */
+  /* Sandalwood (Sandel) Color Scale - Soft Cream & Warm Ivory */
   --sandel-50:  #fdfbf7;      /* Sandel Lightest Tint */
-  --sandel-100: #f8f4ed;      /* Page Background Sandel */
-  --sandel-200: #f0e6d6;      /* Soft Card Sandel */
-  --sandel-300: #e5d5c0;      /* Border Sandel */
-  --sandel-400: #d1bfa7;      /* Medium Sandel */
-  --sandel-500: #ae967a;      /* Warm Sandel */
-  --sandel-600: #8d7356;      /* Deep Sandel Accent */
-  --sandel-700: #5d4836;      /* Muted Sandel Text */
-  --sandel-800: #3b2c20;      /* Dark Sandel Text */
-  --sandel-900: #1b1008;      /* Deepest Heading Sandel */
+  --sandel-100: #faf6f0;      /* Page Background Sandel */
+  --sandel-200: #f4ebd9;      /* Soft Card Sandel */
+  --sandel-300: #e8d9bf;      /* Border Sandel */
+  --sandel-400: #d4c1a0;      /* Medium Sandel */
+  --sandel-500: #b59e7a;      /* Warm Sandel */
+  --sandel-600: #927a58;      /* Deep Sandel Accent */
+  --sandel-700: #5f4c33;      /* Muted Sandel Text */
+  --sandel-800: #3d2d1c;      /* Dark Sandel Text */
+  --sandel-900: #1c1106;      /* Deepest Heading Sandel */
 
   /* Neutral Dark Scale */
   --slate-900: #0f172a;
@@ -56,21 +56,21 @@
   --info-bg: #ecfeff;
 
   /* Admin Dashboard Theme */
-  --admin-bg: #f8f4ed;
+  --admin-bg: #faf6f0;
   --admin-card: #ffffff;
-  --admin-border: #e5d5c0;
-  --admin-sidebar: #4c0519;
-  --admin-sidebar-hover: #881337;
-  --admin-text: #1b1008;
-  --admin-muted: #5d4836;
+  --admin-border: #e8d9bf;
+  --admin-sidebar: #1e1b4b;
+  --admin-sidebar-hover: #312e81;
+  --admin-text: #1c1106;
+  --admin-muted: #5f4c33;
 
   /* Luxury Gradients */
-  --grad-hero: linear-gradient(135deg, #2a050f 0%, #4c0519 35%, #9f1239 70%, #e11d48 100%);
-  --grad-primary: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  --grad-hero: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #3730a3 75%, #4f46e5 100%);
+  --grad-primary: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
   --grad-emerald: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --grad-sandel: linear-gradient(135deg, #fdfbf7 0%, #f8f4ed 50%, #f0e6d6 100%);
+  --grad-sandel: linear-gradient(135deg, #fdfbf7 0%, #faf6f0 50%, #f4ebd9 100%);
   --grad-card: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
-  --grad-glow: radial-gradient(circle, rgba(225, 29, 72, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+  --grad-glow: radial-gradient(circle, rgba(79, 70, 229, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
 
   /* Geometry & Radius */
   --radius-sm: 8px;
@@ -80,11 +80,8 @@
   --radius-full: 9999px;
 
   /* Luxurious Multi-layered Ambient Shadows */
-  --shadow-sm: 0 2px 8px rgba(27, 16, 8, 0.04);
-  --shadow-md: 0 10px 25px -5px rgba(225, 29, 72, 0.1), 0 4px 10px -2px rgba(27, 16, 8, 0.05);
-  --shadow-lg: 0 20px 40px -12px rgba(225, 29, 72, 0.18), 0 8px 16px -4px rgba(27, 16, 8, 0.06);
-  --shadow-xl: 0 30px 60px -15px rgba(159, 18, 57, 0.25), 0 12px 24px -6px rgba(27, 16, 8, 0.08);
-
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 25px -5px rgba(79, 70, 229, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
   /* Fonts & Transitions */
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
