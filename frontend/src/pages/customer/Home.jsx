@@ -60,42 +60,28 @@ export function Home() {
 
             {/* Giant Luxury Heading */}
             <h1 className="hero-title">
-              Experience Royal <br />
+              Experience <br />
               <span style={{
-                background: 'linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 60%, #d97706 100%)',
+                background: 'linear-gradient(135deg, #38bdf8 0%, #00f2fe 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 2px 8px rgba(29, 78, 216, 0.2))'
+                filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4))'
               }}>
-                Shopping Precision.
+                Afsoo Shopping.
               </span>
             </h1>
 
             {/* Feature Pills under Heading */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2.5rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(0,0,0,0.25)', padding: '0.4rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.82rem', fontWeight: 700, border: '1px solid rgba(255,255,255,0.15)' }}>
-                <Zap size={14} style={{ color: '#fca5a5' }} /> Express Dispatch
+                <Zap size={14} style={{ color: '#38bdf8' }} /> Express Dispatch
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(0,0,0,0.25)', padding: '0.4rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.82rem', fontWeight: 700, border: '1px solid rgba(255,255,255,0.15)' }}>
-                <ShieldCheck size={14} style={{ color: '#fca5a5' }} /> 100% Authentic
+                <ShieldCheck size={14} style={{ color: '#38bdf8' }} /> 100% Authentic
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(0,0,0,0.25)', padding: '0.4rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.82rem', fontWeight: 700, border: '1px solid rgba(255,255,255,0.15)' }}>
-                <Award size={14} style={{ color: '#fca5a5' }} /> Premium Quality
+                <Award size={14} style={{ color: '#38bdf8' }} /> Premium Quality
               </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
-              <Link to="/products">
-                <Button size="lg" icon={ShoppingBag} style={{
-                  background: '#ffffff',
-                  color: '#b91c1c',
-                  fontWeight: 800,
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
-                  border: 'none',
-                }}>
-                  Explore Catalog
-                </Button>
-              </Link>
             </div>
           </div>
 

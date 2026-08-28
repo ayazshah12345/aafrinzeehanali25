@@ -103,8 +103,8 @@ export function Navbar() {
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', borderLeft: '1px solid rgba(255, 255, 255, 0.15)', paddingLeft: '0.875rem' }}>
-              <Link to="/login" className="btn btn-outline btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.35rem 0.75rem', background: 'rgba(255,255,255,0.1)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.2)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderLeft: '1px solid rgba(255, 255, 255, 0.15)', paddingLeft: '0.875rem' }}>
+              <Link to="/login" className="btn btn-primary btn-sm" style={{ fontWeight: 800, padding: '0.35rem 0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                 <User size={14} /> Sign In
               </Link>
               <Link to="/register" className="btn btn-primary btn-sm" style={{ fontWeight: 800, padding: '0.35rem 0.75rem' }}>
