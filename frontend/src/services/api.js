@@ -32,7 +32,7 @@ const fetchApi = async (endpoint, options = {}) => {
           ...(options.headers || {}),
         },
       });
-      if (res.ok || res.status === 400 || res.status === 404 || res.status === 401) {
+      if (res) {
         return res;
       }
     } catch (err) {
@@ -60,7 +60,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(userData),
       });
-      return await res.json();
+      const data = await res.json().catch(() => ({}));
+      return data;
     } catch (err) {
       return { status: 'error', message: 'Failed to connect to server.' };
     }
@@ -75,7 +76,7 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok && data && data.status === 'success' && data.data && data.data.token) {
         localStorage.setItem('afsoo_auth_token', data.data.token);
         return data;
