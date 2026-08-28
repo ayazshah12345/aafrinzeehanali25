@@ -139,41 +139,41 @@ export function MyOrders() {
                 <div
                   style={{
                     background: isCancelled
-                      ? 'rgba(248, 113, 113, 0.15)'
+                      ? '#fee2e2'
                       : isConfirmed
-                      ? 'rgba(52, 211, 153, 0.15)'
-                      : 'rgba(56, 189, 248, 0.15)',
-                    border: `1.5px solid ${isCancelled ? '#f87171' : isConfirmed ? '#34d399' : '#00f2fe'}`,
+                      ? '#dcfce7'
+                      : '#eff6ff',
+                    border: `1.5px solid ${isCancelled ? '#fca5a5' : isConfirmed ? '#86efac' : '#bfdbfe'}`,
                     borderRadius: 'var(--radius-md)',
                     padding: '1.15rem 1.25rem',
                     marginBottom: '1.5rem',
-                    boxShadow: isConfirmed ? '0 0 15px rgba(52, 211, 153, 0.2)' : '0 0 15px rgba(0, 242, 254, 0.2)',
+                    boxShadow: 'var(--shadow-sm)',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                     {isCancelled ? (
-                      <XCircle size={24} style={{ color: '#f87171', marginTop: '2px', flexShrink: 0 }} />
+                      <XCircle size={24} style={{ color: '#dc2626', marginTop: '2px', flexShrink: 0 }} />
                     ) : isConfirmed ? (
-                      <PackageCheck size={24} style={{ color: '#34d399', marginTop: '2px', flexShrink: 0 }} />
+                      <PackageCheck size={24} style={{ color: '#059669', marginTop: '2px', flexShrink: 0 }} />
                     ) : (
-                      <Clock size={24} style={{ color: '#00f2fe', marginTop: '2px', flexShrink: 0 }} />
+                      <Clock size={24} style={{ color: '#1d4ed8', marginTop: '2px', flexShrink: 0 }} />
                     )}
                     <div>
-                      <h4 style={{ fontSize: '1rem', fontWeight: 800, color: isCancelled ? '#f87171' : isConfirmed ? '#34d399' : '#00f2fe', margin: 0, marginBottom: '0.35rem', textShadow: '0 0 8px currentColor' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 800, color: isCancelled ? '#991b1b' : isConfirmed ? '#065f46' : '#1e3a8a', margin: 0, marginBottom: '0.35rem' }}>
                         📦 Live Order Tracking Update
                       </h4>
-                      <p style={{ margin: 0, fontSize: '0.95rem', color: '#f8fafc', lineHeight: '1.6', fontWeight: 600 }}>
-                        Product Name: <strong style={{ color: '#00f2fe' }}>{order.productName || 'Afsoo Product'}</strong> | Order ID: <strong style={{ color: '#c084fc' }}>{order.id}</strong> | Status: <strong style={{ textDecoration: 'underline', color: isCancelled ? '#f87171' : isConfirmed ? '#34d399' : '#38bdf8' }}>
+                      <p style={{ margin: 0, fontSize: '0.95rem', color: '#0f172a', lineHeight: '1.6', fontWeight: 600 }}>
+                        Product Name: <strong style={{ color: '#1d4ed8' }}>{order.productName || 'Afsoo Product'}</strong> | Order ID: <strong style={{ color: '#7c3aed' }}>{order.id}</strong> | Status: <strong style={{ textDecoration: 'underline', color: isCancelled ? '#dc2626' : isConfirmed ? '#059669' : '#1d4ed8' }}>
                           {order.status === 'Delivered' || order.status === 'Completed' ? '🎉 Delivered' : order.status === 'Shipped' ? '🚚 Shipped' : order.status === 'Processing' ? '⚙️ Processing' : order.status === 'Order Confirmed' ? '✅ Order Confirmed' : order.status === 'Cancelled' ? '❌ Cancelled' : '⏳ Pending'}
                         </strong>
                       </p>
                       {isConfirmed && (
-                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#34d399', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#065f46', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                           <CheckCircle2 size={16} /> ✅ Admin has confirmed your order! It is now being processed for delivery.
                         </div>
                       )}
                       {isCancelled && (
-                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#f87171', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                        <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', fontWeight: 700, color: '#991b1b', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                           <AlertCircle size={16} /> ❌ Order was cancelled by store administrator.
                         </div>
                       )}
@@ -184,7 +184,7 @@ export function MyOrders() {
                 {/* Real-time Order Progress Steps with Emojis */}
                 {!isCancelled && (
                   <div style={{ marginBottom: '1.5rem', padding: '0 0.25rem' }}>
-                    <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: '#00f2fe', marginBottom: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.06em', textShadow: '0 0 8px rgba(0, 242, 254, 0.4)' }}>
+                    <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: '#1d4ed8', marginBottom: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                       ⚡ Real-Time Fulfillment Tracker
                     </div>
 
@@ -203,20 +203,20 @@ export function MyOrders() {
                             key={st.step}
                             style={{
                               textAlign: 'center',
-                              background: isCurrent ? 'var(--grad-primary)' : isActive ? '#1e2942' : '#0d1322',
-                              color: isCurrent ? '#05070e' : isActive ? '#ffffff' : '#64748b',
-                              border: `1px solid ${isCurrent ? '#00f2fe' : isActive ? '#38bdf8' : '#1e2942'}`,
+                              background: isCurrent ? 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)' : isActive ? '#eff6ff' : '#f8fafc',
+                              color: isCurrent ? '#ffffff' : isActive ? '#1e40af' : '#475569',
+                              border: `1.5px solid ${isCurrent ? '#1d4ed8' : isActive ? '#bfdbfe' : '#e2e8f0'}`,
                               borderRadius: 'var(--radius-md)',
                               padding: '0.75rem 0.5rem',
                               fontWeight: isCurrent ? 800 : 700,
                               fontSize: '0.85rem',
-                              boxShadow: isCurrent ? '0 0 15px rgba(0, 242, 254, 0.5)' : 'none',
+                              boxShadow: isCurrent ? '0 4px 12px rgba(29, 78, 216, 0.3)' : 'none',
                               transition: 'all 0.3s ease',
                             }}
                           >
                             <div style={{ fontSize: '1.25rem', marginBottom: '0.2rem' }}>{st.emoji}</div>
-                            <div style={{ fontSize: '0.72rem', opacity: 0.85, textTransform: 'uppercase', fontWeight: 800 }}>Step {st.step}</div>
-                            <div style={{ fontSize: '0.8125rem' }}>{st.label}</div>
+                            <div style={{ fontSize: '0.72rem', opacity: isCurrent ? 0.9 : 0.8, textTransform: 'uppercase', fontWeight: 800 }}>Step {st.step}</div>
+                            <div style={{ fontSize: '0.8125rem', fontWeight: 800 }}>{st.label}</div>
                           </div>
                         );
                       })}
@@ -225,12 +225,12 @@ export function MyOrders() {
                 )}
 
                 {/* Footer Customer Info */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid #1e2942' }}>
-                  <div style={{ fontSize: '0.875rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <PhoneCall size={16} style={{ color: '#00f2fe' }} /> Helpline: <strong style={{ color: '#ffffff' }}>9629217907</strong>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+                  <div style={{ fontSize: '0.875rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <PhoneCall size={16} style={{ color: '#1d4ed8' }} /> Helpline: <strong style={{ color: '#0f172a' }}>9629217907</strong>
                   </div>
 
-                  <div style={{ fontSize: '0.8125rem', color: '#00f2fe', fontWeight: 700, textShadow: '0 0 6px rgba(0, 242, 254, 0.4)' }}>
+                  <div style={{ fontSize: '0.8125rem', color: '#1d4ed8', fontWeight: 800 }}>
                     ⚡ Synced Live in Real Time
                   </div>
                 </div>

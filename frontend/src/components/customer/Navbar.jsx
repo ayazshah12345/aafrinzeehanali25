@@ -19,14 +19,14 @@ export function Navbar() {
 
   return (
     <header style={{
-      background: 'rgba(11, 15, 25, 0.95)',
+      background: 'rgba(255, 255, 255, 0.98)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
-      borderBottom: '1px solid #1e2942',
+      borderBottom: '1px solid #e5d8c5',
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+      boxShadow: 'var(--shadow-sm)',
     }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1.25rem', position: 'relative' }}>
         {/* Brand Logo & Avatar */}
@@ -37,8 +37,8 @@ export function Navbar() {
             height: '38px',
             borderRadius: '10px',
             overflow: 'hidden',
-            border: '2px solid #00f2fe',
-            boxShadow: '0 0 12px rgba(0, 242, 254, 0.5)',
+            border: '2px solid #1d4ed8',
+            boxShadow: '0 4px 10px rgba(29, 78, 216, 0.2)',
             flexShrink: 0,
           }}>
             <img
@@ -47,8 +47,8 @@ export function Navbar() {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
-          <span style={{ fontWeight: 800, fontSize: '1.25rem', color: '#ffffff', letterSpacing: '-0.02em' }}>
-            Afsoo<span style={{ color: '#00f2fe', textShadow: '0 0 10px rgba(0, 242, 254, 0.6)' }}>Commerce</span>
+          <span style={{ fontWeight: 800, fontSize: '1.25rem', color: '#0f172a', letterSpacing: '-0.02em' }}>
+            Afsoo<span style={{ color: '#1d4ed8' }}>Commerce</span>
           </span>
         </Link>
 

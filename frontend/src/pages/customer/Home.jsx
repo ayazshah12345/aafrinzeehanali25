@@ -62,10 +62,10 @@ export function Home() {
             <h1 className="hero-title">
               Experience Royal <br />
               <span style={{
-                background: 'linear-gradient(135deg, #00f2fe 0%, #c084fc 50%, #38bdf8 100%)',
+                background: 'linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 60%, #d97706 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 0 15px rgba(0, 242, 254, 0.6))'
+                filter: 'drop-shadow(0 2px 8px rgba(29, 78, 216, 0.2))'
               }}>
                 Shopping Precision.
               </span>
